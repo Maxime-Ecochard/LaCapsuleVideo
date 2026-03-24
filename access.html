@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>Gestion des Accès — Capsule Vidéo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-wrap">
+                <img src="icons/icon-192.png" alt="Logo" />
+            </div>
+            <div>
+                <h1>Gestion des accès</h1>
+                <span class="subtitle">Qui peut voir ma capsule</span>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="page">
+
+            <div class="info-box">
+                🔐 Définissez les personnes autorisées à visualiser votre capsule.
+                Vous pouvez révoquer un accès à tout moment. Les données restent sur cet appareil.
+            </div>
+
+            <!-- Current access list -->
+            <p class="section-title">Personnes autorisées</p>
+            <div class="card" id="accessList" style="padding:12px 20px;">
+                <p style="color:var(--gray-400);font-size:0.85rem;text-align:center;padding:16px 0;">Chargement…</p>
+            </div>
+
+            <!-- Add person form -->
+            <p class="section-title mt-16">Ajouter une personne</p>
+            <div class="card">
+                <form id="addPersonForm" autocomplete="off">
+                    <div class="form-group">
+                        <label for="acc-name">Nom complet</label>
+                        <input type="text" id="acc-name" placeholder="Dr. Martin, Sophie D…" maxlength="60" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="acc-role">Rôle</label>
+                        <select id="acc-role" required>
+                            <option value="">— Choisir un rôle —</option>
+                            <option value="soignant">Soignant(e) — Médecin, infirmier(e)…</option>
+                            <option value="confiance">Personne de confiance</option>
+                            <option value="famille">Famille / Proche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="acc-contact">Contact (optionnel)</label>
+                        <input type="text" id="acc-contact" placeholder="Téléphone ou email" maxlength="80" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>
+                        Ajouter cette personne
+                    </button>
+                </form>
+            </div>
+
+            <!-- Note légale -->
+            <div class="card-muted" style="font-size:0.8rem;color:var(--gray-600);line-height:1.6;">
+                <strong style="color:var(--green-dark);">📋 Note :</strong> Les accès définis ici sont indicatifs et
+                stockés localement sur votre appareil. Pour une valeur légale opposable,
+                faites valider vos DAP avec votre équipe soignante ou un professionnel de santé.
+            </div>
+
+            <div class="danger-zone mt-16 mb-16">
+                <p style="font-size:0.85rem;color:var(--danger);font-weight:600;margin-bottom:8px;">⚠️ Zone sensible</p>
+                <p style="font-size:0.8rem;color:#c0392b;margin-bottom:12px;">
+                    Révoquer tous les accès supprime la liste des destinataires, mais pas votre capsule vidéo.
+                </p>
+                <button class="btn btn-danger btn-sm btn-full" id="revokeAllBtn">
+                    Révoquer tous les accès
+                </button>
+            </div>
+
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <a class="nav-item" href="dashboard.html">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146z" />
+                </svg>
+                Accueil
+            </a>
+            <a class="nav-item" href="record.html">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+                </svg>
+                Enregistrer
+            </a>
+            <a class="nav-item active" href="access.html">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    <path fill-rule="evenodd"
+                        d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z" />
+                    <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+                </svg>
+                Accès
+            </a>
+        </nav>
+
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { requireAuth, showToast } from './js/app.js';
+        import { renderAccessList, handleAddPerson } from './js/access.js';
+        import { getAccessList, removeAccessPerson } from './js/app.js';
+
+        if (!requireAuth()) throw new Error('Not authenticated');
+
+        const listEl = document.getElementById('accessList');
+
+        // Initial render
+        renderAccessList(listEl);
+
+        // Add form
+        document.getElementById('addPersonForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            await handleAddPerson(document.getElementById('addPersonForm'), listEl);
+        });
+
+        // Revoke all
+        document.getElementById('revokeAllBtn').addEventListener('click', async () => {
+            if (!confirm('Révoquer TOUS les accès ? Cette action est irréversible.')) return;
+            const list = await getAccessList();
+            await Promise.all(list.map(p => removeAccessPerson(p.id)));
+            showToast('Tous les accès ont été révoqués.');
+            renderAccessList(listEl);
+        });
+    </script>
+</body>
+
+</html>

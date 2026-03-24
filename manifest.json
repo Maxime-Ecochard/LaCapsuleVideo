@@ -1,0 +1,27 @@
+{
+  "name": "Capsule Vidéo pour le Rétablissement",
+  "short_name": "Ma Capsule",
+  "description": "Enregistrez vos Directives Anticipées en Psychiatrie en toute sécurité.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f7f4",
+  "theme_color": "#2d7a4f",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical"],
+  "screenshots": []
+}

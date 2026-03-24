@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#2d7a4f"/>
+  <meta name="description" content="Enregistrez vos Directives Anticipées en Psychiatrie en toute sécurité."/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Ma Capsule"/>
+  <title>Capsule Vidéo — Connexion</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icons/icon-192.png"/>
+  <link rel="icon" href="icons/icon-192.png" type="image/png"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="login-page">
+
+  <!-- Logo -->
+  <img src="icons/icon-512.png" alt="Logo Capsule Vidéo" class="login-logo"/>
+
+  <h1>Capsule Vidéo<br>pour le Rétablissement</h1>
+  <p class="tagline">Vos directives anticipées en psychiatrie,<br>sécurisées et accessibles.</p>
+
+  <!-- Message de bienveillance -->
+  <div class="bienveillance-banner">
+    <div class="heart">💚</div>
+    <p>
+      Bienvenue. Ce moment vous appartient entièrement.<br><br>
+      Prendre soin de soi, c'est déjà un acte de courage.
+      Cette capsule, c'est votre voix qui guidera ceux qui vous aiment
+      dans les moments difficiles.<br><br>
+      <strong>Vous n'êtes pas seul(e).</strong>
+    </p>
+  </div>
+
+  <!-- Formulaire de connexion -->
+  <form class="login-form" id="loginForm" autocomplete="off">
+    <div class="form-group">
+      <label for="userName">Votre prénom ou surnom</label>
+      <input type="text" id="userName" placeholder="Comment vous appelez-vous ?" maxlength="40" required autocomplete="off"/>
+    </div>
+
+    <div class="form-group">
+      <label>Code PIN (4 chiffres)</label>
+      <div class="pin-input-row">
+        <input type="tel" class="pin-digit" id="pin1" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off"/>
+        <input type="tel" class="pin-digit" id="pin2" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off"/>
+        <input type="tel" class="pin-digit" id="pin3" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off"/>
+        <input type="tel" class="pin-digit" id="pin4" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off"/>
+      </div>
+      <p class="mt-8" style="font-size:0.78rem;color:var(--gray-400);text-align:center;">
+        Ce PIN chiffre vos données localement. Ne l'oubliez pas.
+      </p>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4z"/>
+      </svg>
+      Accéder à mon espace
+    </button>
+  </form>
+
+  <p class="mt-24" style="font-size:0.75rem;color:var(--gray-400);text-align:center;line-height:1.6;max-width:300px;">
+    🔒 Vos données ne quittent jamais cet appareil.<br>
+    Tout est chiffré localement avec votre PIN.
+  </p>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+  import { setState, registerSW, showToast } from './js/app.js';
+
+  registerSW();
+
+  // PIN auto-advance
+  const pins = document.querySelectorAll('.pin-digit');
+  pins.forEach((input, i) => {
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/\D/g, '');
+      if (input.value && i < pins.length - 1) pins[i + 1].focus();
+    });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !input.value && i > 0) pins[i - 1].focus();
+    });
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('userName').value.trim();
+    const pin  = Array.from(pins).map(p => p.value).join('');
+
+    if (!name) { showToast('Veuillez entrer votre prénom.'); return; }
+    if (pin.length !== 4) { showToast('Veuillez entrer votre code PIN à 4 chiffres.'); return; }
+
+    setState({ name, pin });
+    window.location.href = 'dashboard.html';
+  });
+</script>
+</body>
+</html>

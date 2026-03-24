@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>Mon Tableau de Bord — Capsule Vidéo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-wrap">
+                <img src="icons/icon-192.png" alt="Logo" />
+            </div>
+            <div>
+                <h1>Capsule Vidéo</h1>
+                <span class="subtitle">Tableau de bord</span>
+            </div>
+            <button class="header-back" id="logoutBtn" title="Se déconnecter" style="margin-left:auto;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                    <path fill-rule="evenodd"
+                        d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                </svg>
+            </button>
+        </header>
+
+        <!-- Page Content -->
+        <main class="page" id="mainPage">
+
+            <!-- Hero / Record CTA -->
+            <div class="dashboard-hero">
+                <p class="dashboard-hero h2" style="font-size:0.95rem;opacity:0.8;margin-bottom:4px;">Bonjour,</p>
+                <p class="hero-name" id="heroName">…</p>
+                <button class="record-btn-hero" id="recordBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+                    </svg>
+                    Enregistrer ma Capsule
+                </button>
+            </div>
+
+            <!-- Current Capsule -->
+            <p class="section-title">Ma Capsule actuelle</p>
+            <div class="card" id="capsuleCard">
+                <div class="video-empty" id="emptyState">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+                    </svg>
+                    <p>Aucune capsule enregistrée.<br>Appuyez sur le bouton ci-dessus pour commencer.</p>
+                </div>
+                <div id="playerGroup" style="display:none;">
+                    <div class="video-container">
+                        <video id="capsulePlayer" controls playsinline></video>
+                    </div>
+                    <div class="capsule-meta mt-8" id="capsuleMeta"></div>
+                    <div class="divider"></div>
+                    <button class="btn btn-danger btn-sm" id="deleteBtn" style="width:100%;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5zm2.5 0a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5z" />
+                        </svg>
+                        Supprimer cette capsule
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="info-box">
+                🔒 Votre vidéo est chiffrée avec votre PIN. Elle ne quitte jamais cet appareil.
+            </div>
+
+            <p class="section-title">Informations</p>
+            <div class="card-muted" style="font-size:0.85rem;color:var(--gray-600);line-height:1.6;">
+                Les <strong>Directives Anticipées en Psychiatrie</strong> (DAP) vous permettent d'exprimer vos souhaits
+                concernant vos soins en cas de crise, quand vous n'êtes plus en mesure de le faire vous-même.
+                <div class="divider"></div>
+                <span style="color:var(--green-dark);font-weight:600;">Durée recommandée :</span> 2 à 5 minutes.<br>
+                <span style="color:var(--green-dark);font-weight:600;">Phases :</span> Identification · Pathologie ·
+                Directives · Message d'espoir.
+            </div>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <a class="nav-item active" href="dashboard.html">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146z" />
+                </svg>
+                Accueil
+            </a>
+            <a class="nav-item" href="record.html">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+                </svg>
+                Enregistrer
+            </a>
+            <a class="nav-item" href="access.html">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    <path fill-rule="evenodd"
+                        d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z" />
+                    <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+                </svg>
+                Accès
+            </a>
+        </nav>
+
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { getState, requireAuth, clearState, getCapsule, deleteCapsule, showToast } from './js/app.js';
+        import { decryptData } from './js/crypto.js';
+
+        if (!requireAuth()) throw new Error('Not authenticated');
+
+        const state = getState();
+        document.getElementById('heroName').textContent = state.name;
+
+        // Load existing capsule
+        async function loadCapsule() {
+            const record = await getCapsule(state.name);
+            if (!record) return;
+
+            const emptyState = document.getElementById('emptyState');
+            const playerGroup = document.getElementById('playerGroup');
+            const player = document.getElementById('capsulePlayer');
+            const meta = document.getElementById('capsuleMeta');
+
+            emptyState.style.display = 'none';
+            playerGroup.style.display = 'block';
+
+            try {
+                const decrypted = await decryptData(record.encryptedVideo, state.pin);
+                const blob = new Blob([decrypted], { type: record.mimeType || 'video/webm' });
+                player.src = URL.createObjectURL(blob);
+
+                const date = new Date(record.recordedAt).toLocaleDateString('fr-FR', {
+                    day: '2-digit', month: 'long', year: 'numeric'
+                });
+                const dur = formatTime(record.duration || 0);
+                meta.innerHTML = `
+        <span class="meta-chip">📅 ${date}</span>
+        <span class="meta-chip">⏱ ${dur}</span>`;
+            } catch {
+                showToast('⚠️ PIN incorrect — impossible de déchiffrer la capsule.');
+            }
+        }
+
+        loadCapsule();
+
+        document.getElementById('recordBtn').addEventListener('click', () => {
+            window.location.href = 'record.html';
+        });
+
+        document.getElementById('deleteBtn')?.addEventListener('click', async () => {
+            if (confirm('Supprimer définitivement votre capsule ? Cette action est irréversible.')) {
+                await deleteCapsule(state.name);
+                showToast('Capsule supprimée.');
+                setTimeout(() => location.reload(), 1500);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            clearState();
+            window.location.href = 'index.html';
+        });
+
+        function formatTime(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>Enregistrement — Capsule Vidéo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <!-- Header -->
+        <header class="app-header">
+            <button class="header-back" id="backBtn" title="Retour">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </button>
+            <div>
+                <h1>Enregistrement guidé</h1>
+                <span class="subtitle">Vos directives anticipées</span>
+            </div>
+        </header>
+
+        <!-- Record area -->
+        <main class="page record-page">
+
+            <!-- Camera -->
+            <div class="camera-container" id="cameraContainer">
+                <video id="videoPreview" playsinline autoplay muted></video>
+
+                <!-- Placeholder when camera not started -->
+                <div class="camera-placeholder" id="cameraPlaceholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
+                    </svg>
+                    <span>Appuyez sur ● pour commencer</span>
+                </div>
+
+                <!-- Prompt overlay -->
+                <div class="prompt-overlay" id="promptOverlay" style="display:none;">
+                    <span class="prompt-phase" id="phaseLabel">Phase 1</span>
+                    <div class="prompt-text" id="promptText">…</div>
+                </div>
+            </div>
+
+            <!-- Phase progress dots -->
+            <div class="phase-progress">
+                <div class="phase-dot" id="dot0"></div>
+                <div class="phase-dot" id="dot1"></div>
+                <div class="phase-dot" id="dot2"></div>
+                <div class="phase-dot" id="dot3"></div>
+            </div>
+
+            <!-- Timer -->
+            <div class="rec-timer">
+                <div class="rec-dot" id="recDot"></div>
+                <span id="timer">00:00</span>
+                <span style="color:var(--gray-400);font-weight:400;">/ 05:00 recommandé</span>
+            </div>
+
+            <!-- Controls -->
+            <div class="record-controls">
+                <button class="btn btn-secondary btn-sm" id="cancelBtn" style="display:none;">Annuler</button>
+
+                <button class="rec-btn-main" id="mainRecBtn" title="Enregistrer">
+                    <div class="inner-circle"></div>
+                </button>
+
+                <button class="btn btn-primary btn-sm" id="saveBtn" style="display:none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z" />
+                    </svg>
+                    Sauvegarder
+                </button>
+            </div>
+
+            <!-- Prompt guide list -->
+            <div class="prompts-panel">
+                <h3>Guide — phases de l'enregistrement</h3>
+                <ul class="prompt-list" id="promptList">
+                    <li id="li0">🪪 Identification</li>
+                    <li id="li1">🧠 Pathologie & Signes d'alerte</li>
+                    <li id="li2">📋 Mes Directives de Soins</li>
+                    <li id="li3">💚 Mon Message d'Espoir</li>
+                </ul>
+            </div>
+
+            <!-- Bienveillance reminder -->
+            <div class="info-box" style="margin-top:16px;">
+                💚 Prenez le temps qu'il vous faut. Faites une pause si besoin. Vous pouvez réenregistrer à tout moment.
+            </div>
+
+        </main>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { requireAuth, showToast, navigate } from './js/app.js';
+        import { GuidedRecorder } from './js/recorder.js';
+
+        if (!requireAuth()) throw new Error('Not authenticated');
+
+        const recorder = new GuidedRecorder({
+            videoEl: document.getElementById('videoPreview'),
+            overlayPhase: document.getElementById('phaseLabel'),
+            overlayText: document.getElementById('promptText'),
+            phaseDots: document.querySelectorAll('.phase-dot'),
+            promptList: document.querySelectorAll('#promptList li'),
+            timerEl: document.getElementById('timer'),
+            recDot: document.getElementById('recDot'),
+            onSaved: () => {
+                setTimeout(() => navigate('dashboard.html'), 1500);
+            }
+        });
+
+        const mainRecBtn = document.getElementById('mainRecBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const placeholder = document.getElementById('cameraPlaceholder');
+        const overlay = document.getElementById('promptOverlay');
+
+        let recordingState = 'idle'; // idle | recording | stopped
+
+        mainRecBtn.addEventListener('click', async () => {
+            if (recordingState === 'idle') {
+                // Start
+                const ok = await recorder.initCamera();
+                if (!ok) return;
+                await recorder.start();
+                recordingState = 'recording';
+
+                placeholder.style.display = 'none';
+                overlay.style.display = 'block';
+                mainRecBtn.classList.add('recording');
+                mainRecBtn.title = 'Arrêter l\'enregistrement';
+                cancelBtn.style.display = 'inline-flex';
+                saveBtn.style.display = 'none';
+
+            } else if (recordingState === 'recording') {
+                // Stop
+                mainRecBtn.disabled = true;
+                mainRecBtn.classList.remove('recording');
+                await recorder.stop();
+                recordingState = 'stopped';
+                mainRecBtn.disabled = false;
+
+                overlay.style.display = 'none';
+                cancelBtn.style.display = 'none';
+                saveBtn.style.display = 'none';
+                // auto-saved in onSaved callback
+            }
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            if (confirm('Annuler l\'enregistrement ? La vidéo sera perdue.')) {
+                recorder.destroy();
+                recordingState = 'idle';
+                placeholder.style.display = 'flex';
+                overlay.style.display = 'none';
+                mainRecBtn.classList.remove('recording');
+                cancelBtn.style.display = 'none';
+                saveBtn.style.display = 'none';
+                document.getElementById('timer').textContent = '00:00';
+                document.querySelectorAll('.phase-dot').forEach(d => d.className = 'phase-dot');
+            }
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            if (recordingState === 'recording') {
+                if (!confirm('Quitter ? L\'enregistrement en cours sera perdu.')) return;
+                recorder.destroy();
+            }
+            navigate('dashboard.html');
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => recorder.destroy());
+    </script>
+</body>
+
+</html>
