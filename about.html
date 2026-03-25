@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>À propos — Capsule Vidéo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .about-section { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .about-section h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 1.3rem; }
+        .about-section h3 { color: var(--text-color); margin-bottom: 5px; font-size: 1.1rem; }
+        .about-section p { margin-bottom: 12px; line-height: 1.5; color: var(--gray-500); }
+        .profile { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .profile-icon { width: 50px; height: 50px; background: var(--secondary-color); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; flex-shrink: 0; }
+        .quote { font-style: italic; background: #f0f7f4; padding: 12px; border-left: 4px solid var(--primary-color); margin-bottom: 15px; border-radius: 0 8px 8px 0; color: #2d7a4f; }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <button class="header-back" id="backBtn" title="Retour">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </button>
+            <div>
+                <h1>À propos</h1>
+            </div>
+        </header>
+
+        <main class="page">
+            <div class="about-section">
+                <h2>Le Projet</h2>
+                <p><strong>Capsule Vidéo pour le Rétablissement</strong> est un outil thérapeutique innovant en santé mentale, créé par une personne concernée pour ses pairs.</p>
+                <p>Cet outil s'inscrit dans le champ des <strong>Directives Anticipées en Psychiatrie (DAP)</strong>. Il prend la forme d'un enregistrement vidéo court, réalisé en période de stabilité, permettant à la personne de se présenter, de nommer sa pathologie, d'énoncer ses besoins et de se transmettre un message d'espoir en cas de rechute.</p>
+                <p>Le support vidéo permet de transmettre des dimensions non verbales fondamentales (émotion, intonation, posture), renforçant l'autodétermination et facilitant l'appropriation du message par les professionnels et les proches.</p>
+            </div>
+
+            <div class="about-section">
+                <h2>L'Équipe</h2>
+                
+                <div class="profile">
+                    <div class="profile-icon">É</div>
+                    <div>
+                        <h3>Émilie André</h3>
+                        <p style="margin:0; font-size: 0.9rem;">Patiente experte et formatrice en santé mentale, à l'initiative du projet.</p>
+                    </div>
+                </div>
+                <div class="quote">« La temporalité est mon allié. »</div>
+
+                <div class="profile">
+                    <div class="profile-icon" style="background: #eef2fa; color: #3b5998;">M</div>
+                    <div>
+                        <h3>Maxime</h3>
+                        <p style="margin:0; font-size: 0.9rem;">Apprenti développeur, qui met en pratique ces belles idées.</p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color); font-size: 1.05rem; font-weight: 600;">En collaboration avec :</p>
+                
+                <div class="profile">
+                    <div class="profile-icon" style="background: #fff0f5; color: #d81b60;">C</div>
+                    <div>
+                        <h3>Ségolène Gil & Julien Comminal</h3>
+                        <p style="margin:0; font-size: 0.9rem;">Infirmière en réhabilitation psychosociale et Infirmier IPA, à l'hôpital spécialisé Pierre Jamet d'Albi-Tarn.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <h2>Nous Contacter</h2>
+                <p>Vous souhaitez en savoir plus ou échanger sur les conditions de développement de cet outil ?</p>
+                <form id="contactForm" onsubmit="event.preventDefault(); sendEmail();">
+                    <input type="text" id="contactName" class="input-field" placeholder="Votre nom" required style="margin-bottom: 12px;" />
+                    <textarea id="contactMessage" class="input-field" placeholder="Votre message" rows="4" required style="margin-bottom: 15px; resize: none;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; display: flex; justify-content: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
+                        </svg>
+                        Envoyer un e-mail
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('backBtn').addEventListener('click', () => {
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function sendEmail() {
+            const name = document.getElementById('contactName').value;
+            const message = document.getElementById('contactMessage').value;
+            const subject = encodeURIComponent("Contact depuis l'application Capsule Vidéo");
+            
+            let body = "Bonjour Émilie,\n\n";
+            body += message + "\n\n";
+            body += "Cordialement,\n" + name;
+            
+            window.location.href = `mailto:milieandre973@gmail.com?subject=${subject}&body=${encodeURIComponent(body)}`;
+        }
+    </script>
+</body>
+</html>

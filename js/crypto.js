@@ -66,7 +66,13 @@ export async function verifyPin(encrypted, pin) {
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 function bufToB64(buffer) {
-    return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 8192;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
 }
 
 function b64ToBuf(b64) {

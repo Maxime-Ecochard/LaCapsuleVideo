@@ -125,7 +125,7 @@ export class GuidedRecorder {
     }
 
     // Stop recording and save
-    async stop() {
+    async stop(skipSave = false) {
         if (!this.mediaRecorder || this.mediaRecorder.state === 'inactive') return;
 
         this._stopTimer();
@@ -137,11 +137,52 @@ export class GuidedRecorder {
             this.mediaRecorder.onstop = async () => {
                 const mimeType = getSupportedMimeType();
                 const blob = new Blob(this.chunks, { type: mimeType });
-                await this._saveEncrypted(blob);
+                
+                // Trigger auto download of the unencrypted file locally
+                const state = getState();
+                const userName = state.name || 'Capsule';
+                const now = new Date();
+                const dateStr = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getFullYear()}`;
+                const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+                const filename = `DAP_${userName}_${dateStr}.${ext}`;
+                
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+
+                if (!skipSave) {
+                    await this._saveEncrypted(blob);
+                }
                 resolve(blob);
             };
             this.mediaRecorder.stop();
         });
+    }
+
+    pause() {
+        if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+            this.mediaRecorder.pause();
+            this._stopTimer();
+            this._stopPrompts();
+            if (this.recDot) this.recDot.classList.remove('recording');
+        }
+    }
+
+    resume() {
+        if (this.mediaRecorder && this.mediaRecorder.state === 'paused') {
+            this.mediaRecorder.resume();
+            this._startTimer();
+            this._startPrompts();
+            if (this.recDot) this.recDot.classList.add('recording');
+        }
     }
 
     // Destroy camera stream

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>Capsule Vidéo — Démo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
+    <link rel="icon" href="icons/NewLogo.png" type="image/png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .demo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 99px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.6s 0.1s ease-out both;
+            box-shadow: 0 3px 12px rgba(255, 107, 53, 0.35);
+        }
+
+        .demo-info {
+            background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            border: 1px solid #ffc107;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 0.82rem;
+            color: #856404;
+            text-align: left;
+            line-height: 1.6;
+            width: 100%;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s 0.4s ease-out both;
+        }
+
+        .demo-info strong {
+            color: #6d4c00;
+        }
+
+        .demo-creds {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.84rem;
+        }
+
+        .pin-prefilled {
+            background: linear-gradient(135deg, #e8f5ee, #d4edde) !important;
+            border-color: var(--green-mid) !important;
+            color: var(--green-dark) !important;
+            font-size: 1.4rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-page">
+
+        <!-- Logo -->
+        <img src="icons/NewLogo.png" alt="Logo Capsule Vidéo" class="login-logo" />
+
+        <!-- Badge démo -->
+        <span class="demo-badge">🎬 Mode démonstration</span>
+
+        <h1>Capsule Vidéo<br>pour le Rétablissement</h1>
+        <p class="tagline">Vos directives anticipées en psychiatrie,<br>sécurisées et accessibles.</p>
+
+        <!-- Info démo -->
+        <div class="demo-info">
+            <strong>💡 Version de démonstration</strong><br>
+            Identifiants pré-remplis pour la visite guidée :<br>
+            Prénom : <span class="demo-creds">Émilie</span> &nbsp;|&nbsp; PIN : <span class="demo-creds">1 2 3
+                4</span><br><br>
+            La capsule vidéo du <strong>10 janvier 2026</strong> est déjà disponible dans cet espace.
+        </div>
+
+        <!-- Formulaire de connexion pré-rempli -->
+        <form class="login-form" id="loginForm" autocomplete="off">
+            <div class="form-group">
+                <label for="userName">Votre prénom ou surnom</label>
+                <input type="text" id="userName" value="Émilie" placeholder="Comment vous appelez-vous ?" maxlength="40"
+                    required autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+                <label>Code PIN (4 chiffres)</label>
+                <div class="pin-input-row">
+                    <input type="tel" class="pin-digit pin-prefilled" id="pin1" maxlength="1" pattern="[0-9]"
+                        inputmode="numeric" autocomplete="off" value="1" readonly />
+                    <input type="tel" class="pin-digit pin-prefilled" id="pin2" maxlength="1" pattern="[0-9]"
+                        inputmode="numeric" autocomplete="off" value="2" readonly />
+                    <input type="tel" class="pin-digit pin-prefilled" id="pin3" maxlength="1" pattern="[0-9]"
+                        inputmode="numeric" autocomplete="off" value="3" readonly />
+                    <input type="tel" class="pin-digit pin-prefilled" id="pin4" maxlength="1" pattern="[0-9]"
+                        inputmode="numeric" autocomplete="off" value="4" readonly />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4z" />
+                </svg>
+                Accéder à la démo
+            </button>
+        </form>
+
+        <p class="mt-24"
+            style="font-size:0.75rem;color:var(--gray-400);text-align:center;line-height:1.6;max-width:300px;">
+            🎬 Démo — la vidéo est chargée directement sans chiffrement.
+        </p>
+
+        <!-- Étape préalable DAP -->
+        <div class="info-box" style="margin-top: 24px; text-align: left; line-height: 1.5;">
+            <h3 style="font-size: 0.95rem; color: var(--primary-color); margin-bottom: 8px;">Étape préalable : Vos DAP à l'écrit</h3>
+            <p style="margin-bottom: 8px;">Avant d'enregistrer votre capsule, il est recommandé de rédiger vos Directives Anticipées en Psychiatrie. Vous pouvez utiliser le <a href="https://www.psycom.org/agir/la-defense-des-droits/kit-mon-gps/#telecharger-le-livret-mon-gps-697d5fd9e384f" target="_blank" rel="noopener" style="color:var(--primary-color);font-weight:600;text-decoration:underline;">Kit Mon GPS (Psycom)</a>.</p>
+            
+            <p style="margin-bottom: 4px; font-weight: 600; font-size: 0.8rem;">Livrets interactifs remplissables :</p>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.8rem;">
+                <li><strong>Adultes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_VF_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_PRISM_monGPS_NOTICE_Usagers.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
+                <li><strong>Ados / Jeunes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_ADOS_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2024/04/PSYCOM_GPS_ADO-JEUNES-ADULTES_Notice_Jeunes_DEF.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
+            </ul>
+        </div>
+
+        <div style="text-align:center; margin-top: 20px;">
+            <a href="about.html" style="color:var(--gray-500); font-size: 0.9rem; text-decoration: underline;">À propos du projet</a>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            // Stocker les infos démo en sessionStorage et rediriger
+            sessionStorage.setItem('capsule_user', JSON.stringify({ name: 'Émilie', pin: '1234', demo: true }));
+            window.location.href = 'dashboard-demo.html';
+        });
+    </script>
+</body>
+
+</html>
