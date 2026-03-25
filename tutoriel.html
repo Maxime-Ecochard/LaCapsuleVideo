@@ -131,23 +131,16 @@
             </div>
 
             <!-- TAB VIDEO (AVATAR) -->
-            <div class="tuto-content" id="tab-video">
-                <div class="media-player" id="avatarPlayer">
-                    <div class="avatar-container">
-                        <div class="speaking-ring"></div>
-                        <img src="icons/avatar_guide.png" alt="Guide" />
-                    </div>
-                    <h3 style="color:var(--text-color); margin-bottom: 8px;">Tutoriel Vidéo (Avatar)</h3>
-                    <p style="font-size:0.9rem; color:var(--gray-500); line-height:1.5;">Laissez-vous guider visuellement par notre avatar bienveillant.</p>
-                    
-                    <div class="audio-controls">
-                        <button class="btn-play" id="videoPlayBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" id="videoIcon">
-                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="media-status" id="videoStatus">Prêt à visionner</div>
+            <div class="tuto-content" id="tab-video" style="padding: 0; overflow: hidden; border-radius: 12px; background: transparent;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <iframe 
+                        src="https://app.heygen.com/embeds/3dc5f636449247aea664c004863ad207" 
+                        title="Tutoriel vidéo" 
+                        frameborder="0" 
+                        allow="encrypted-media; fullscreen;" 
+                        allowfullscreen 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
+                    </iframe>
                 </div>
             </div>
 
@@ -179,12 +172,8 @@
         let isPlaying = false;
         
         const audioPlayBtn = document.getElementById('audioPlayBtn');
-        const videoPlayBtn = document.getElementById('videoPlayBtn');
         const audioIcon = document.getElementById('audioIcon');
-        const videoIcon = document.getElementById('videoIcon');
         const audioStatus = document.getElementById('audioStatus');
-        const videoStatus = document.getElementById('videoStatus');
-        const avatarPlayer = document.getElementById('avatarPlayer');
 
         const playSvg = '<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>';
         const pauseSvg = '<path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>';
@@ -197,10 +186,7 @@
                 audioElement.play().catch(e => console.log("Erreur de lecture audio", e));
                 isPlaying = true;
                 audioIcon.innerHTML = pauseSvg;
-                videoIcon.innerHTML = pauseSvg;
                 audioStatus.textContent = "Lecture en cours...";
-                videoStatus.textContent = "Lecture en cours...";
-                avatarPlayer.classList.add('is-speaking');
             }
         }
 
@@ -215,10 +201,7 @@
         function stopUI() {
             isPlaying = false;
             audioIcon.innerHTML = playSvg;
-            videoIcon.innerHTML = playSvg;
             audioStatus.textContent = "Prêt à écouter";
-            videoStatus.textContent = "Prêt à visionner";
-            avatarPlayer.classList.remove('is-speaking');
         }
 
         audioElement.addEventListener('ended', () => {
@@ -230,7 +213,6 @@
         window.addEventListener('beforeunload', stopAudio);
         
         audioPlayBtn.addEventListener('click', toggleAudio);
-        videoPlayBtn.addEventListener('click', toggleAudio);
     </script>
 </body>
 </html>
