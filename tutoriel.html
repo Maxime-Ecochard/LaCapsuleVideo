@@ -170,35 +170,12 @@
                 contents.forEach(c => c.classList.remove('active'));
                 tab.classList.add('active');
                 document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-                stopSpeech(); // stop if playing
+                stopAudio(); // stop if playing
             });
         });
 
-        // Speech Synthesis Logic
-        const scriptText = "Bienvenue dans ce tutoriel pour réaliser votre Capsule Vidéo pour le Rétablissement. " +
-            "La capsule vidéo est un enregistrement court d'environ 2 à 5 minutes, que vous réalisez dans une période de stabilité. " +
-            "L'objectif est de vous adresser directement à vous-même pour les jours plus difficiles, afin de vous rappeler vos ressources et vos souhaits en cas de crise. " +
-            "Étape 1 : Choisissez un endroit tranquille et bien éclairé. Placez votre téléphone en mode avion. " +
-            "Étape 2 : Structurez votre message. Commencez par vous identifier et donner la date. " +
-            "Ensuite, rappelez-vous vos forces. Énoncez ce que vous souhaitez ou refusez en période de crise, c'est ce qu'on appelle les Directives Anticipées. " +
-            "Enfin, terminez par un message d'espoir avec tendresse ou humour. " +
-            "Étape 3 : Regardez la caméra comme si vous parliez à un ami. Parlez avec bienveillance. Ce n'est pas une performance cinématographique. " +
-            "Étape 4 : Sauvegardez la vidéo précieusement. C'est un message très intime qui ne sera partagé qu'avec votre accord. " +
-            "Si vous avez peur de vous filmer, souvenez-vous que c'est avant tout un geste de soin pour vous-même. Vous gardez le contrôle total !";
-
-        let synth = window.speechSynthesis;
-        let utterance = new SpeechSynthesisUtterance(scriptText);
-        utterance.lang = 'fr-FR';
-        utterance.rate = 0.95;
-
-        // Try to select a nice French voice
-        function setVoice() {
-            const voices = synth.getVoices();
-            const frVoice = voices.find(v => v.lang.startsWith('fr') && (v.name.includes('Google') || v.name.includes('Thomas') || v.name.includes('Audrey')));
-            if(frVoice) utterance.voice = frVoice;
-        }
-        synth.onvoiceschanged = setVoice;
-
+        // Audio File Logic
+        const audioElement = new Audio('Audio%20tutoriel.m4a');
         let isPlaying = false;
         
         const audioPlayBtn = document.getElementById('audioPlayBtn');
@@ -212,13 +189,12 @@
         const playSvg = '<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>';
         const pauseSvg = '<path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>';
 
-        function toggleSpeech() {
+        function toggleAudio() {
             if (isPlaying) {
-                synth.cancel();
+                audioElement.pause();
                 stopUI();
             } else {
-                setVoice();
-                synth.speak(utterance);
+                audioElement.play().catch(e => console.log("Erreur de lecture audio", e));
                 isPlaying = true;
                 audioIcon.innerHTML = pauseSvg;
                 videoIcon.innerHTML = pauseSvg;
@@ -228,9 +204,10 @@
             }
         }
 
-        function stopSpeech() {
+        function stopAudio() {
             if (isPlaying) {
-                synth.cancel();
+                audioElement.pause();
+                audioElement.currentTime = 0;
                 stopUI();
             }
         }
@@ -244,12 +221,16 @@
             avatarPlayer.classList.remove('is-speaking');
         }
 
-        utterance.onend = stopUI;
-        // if user browses away, stop speech
-        window.addEventListener('beforeunload', stopSpeech);
+        audioElement.addEventListener('ended', () => {
+             audioElement.currentTime = 0;
+             stopUI();
+        });
+
+        // stop audio if user browses away
+        window.addEventListener('beforeunload', stopAudio);
         
-        audioPlayBtn.addEventListener('click', toggleSpeech);
-        videoPlayBtn.addEventListener('click', toggleSpeech);
+        audioPlayBtn.addEventListener('click', toggleAudio);
+        videoPlayBtn.addEventListener('click', toggleAudio);
     </script>
 </body>
 </html>
