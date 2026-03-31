@@ -4,7 +4,7 @@
  */
 
 import { encryptData } from './crypto.js';
-import { saveCapsule, getState, showToast } from './app.js';
+import { saveCapsule, getState, showToast, addHistoryEntry, getNextCapsuleNumber } from './app.js';
 
 // ── Prompt phases ──────────────────────────────────────────────────────────
 
@@ -291,6 +291,19 @@ export class GuidedRecorder {
             });
 
             showToast('✅ Capsule sauvegardée en toute sécurité !');
+
+            // Log dans l'historique
+            try {
+                const capsuleNum = await getNextCapsuleNumber();
+                await addHistoryEntry({
+                    type: 'record',
+                    details: {
+                        capsuleNumber: capsuleNum,
+                        duration: this.elapsedSec
+                    }
+                });
+            } catch (e) { console.warn('History log error:', e); }
+
             this.onSaved();
         } catch (err) {
             console.error('Save error:', err);

@@ -1,16 +1,23 @@
-const CACHE_NAME = 'capsule-video-v1';
+const CACHE_NAME = 'capsule-video-v3';
 const STATIC_ASSETS = [
     './',
     './index.html',
     './dashboard.html',
     './record.html',
     './access.html',
+    './historique.html',
+    './about.html',
+    './tutoriel.html',
+    './changelog.html',
     './css/style.css',
     './js/app.js',
     './js/crypto.js',
     './js/recorder.js',
     './js/access.js',
     './manifest.json',
+    './icons/LogoBleu.png',
+    './icons/PhotoProfilEmilie.jpg',
+    './icons/avatar_guide.png',
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
 ];
 

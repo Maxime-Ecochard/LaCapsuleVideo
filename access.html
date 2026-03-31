@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#2d7a4f" />
     <title>Gestion des Accès — Capsule Vidéo</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
 
@@ -17,7 +17,7 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo-wrap">
-                <img src="icons/NewLogo.png" alt="Logo" />
+                <img src="icons/LogoBleu.png" alt="Logo" />
             </div>
             <div>
                 <h1>Gestion des accès</h1>
@@ -29,7 +29,8 @@
         <main class="page">
 
             <div class="info-box">
-                🔐 Définissez les personnes autorisées à visualiser votre capsule.
+                🔐 Définissez les personnes autorisées à visualiser votre capsule, vous la faire visualiser en cas
+                d’urgence et la montrer au personnel soignant.
                 Vous pouvez révoquer un accès à tout moment. Les données restent sur cet appareil.
             </div>
 
@@ -43,6 +44,7 @@
             <p class="section-title mt-16">Ajouter une personne</p>
             <div class="card">
                 <form id="addPersonForm" autocomplete="off">
+                    <input type="hidden" id="acc-id" />
                     <div class="form-group">
                         <label for="acc-name">Nom complet</label>
                         <input type="text" id="acc-name" placeholder="Dr. Martin, Sophie D…" maxlength="60" required />
@@ -63,22 +65,24 @@
                         <input type="text" id="acc-contact" placeholder="Téléphone ou email" maxlength="80" />
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-full">
+                    <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path
                                 d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                         </svg>
-                        Ajouter cette personne
+                        <span id="submitBtnText">Ajouter cette personne</span>
+                    </button>
+                    <button type="button" id="cancelEdit" class="btn btn-secondary btn-sm btn-full mt-12" style="display:none;">
+                        Annuler la modification
                     </button>
                 </form>
             </div>
 
             <!-- Note légale -->
             <div class="card-muted" style="font-size:0.8rem;color:var(--gray-600);line-height:1.6;">
-                <strong style="color:var(--green-dark);">📋 Note :</strong> Les accès définis ici sont indicatifs et
-                stockés localement sur votre appareil. Pour une valeur légale opposable,
-                faites valider vos DAP avec votre équipe soignante ou un professionnel de santé.
+                <strong style="color:var(--green-dark);">📋 Note&nbsp;:</strong> Les accès définis ici sont indicatifs et
+                stockés localement sur votre appareil.
             </div>
 
             <div class="danger-zone mt-16 mb-16">
@@ -120,8 +124,9 @@
             </a>
             <a class="nav-item" href="about.html">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path
+                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
                 </svg>
                 À propos
             </a>
@@ -131,28 +136,43 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { requireAuth, showToast } from './js/app.js';
-        import { renderAccessList, handleAddPerson } from './js/access.js';
+        import { requireAuth, showToast, addHistoryEntry } from './js/app.js';
+        import { renderAccessList, handleAddPerson, cancelEdit } from './js/access.js';
         import { getAccessList, removeAccessPerson } from './js/app.js';
 
         if (!requireAuth()) throw new Error('Not authenticated');
 
         const listEl = document.getElementById('accessList');
+        const addForm = document.getElementById('addPersonForm');
 
         // Initial render
         renderAccessList(listEl);
 
-        // Add form
-        document.getElementById('addPersonForm').addEventListener('submit', async e => {
+        // Add/Update form
+        addForm.addEventListener('submit', async e => {
             e.preventDefault();
-            await handleAddPerson(document.getElementById('addPersonForm'), listEl);
+            await handleAddPerson(addForm, listEl);
+        });
+
+        // Cancel edit
+        document.getElementById('cancelEdit').addEventListener('click', () => {
+            cancelEdit(addForm);
         });
 
         // Revoke all
         document.getElementById('revokeAllBtn').addEventListener('click', async () => {
-            if (!confirm('Révoquer TOUS les accès ? Cette action est irréversible.')) return;
+            if (!confirm('Révoquer TOUS les accès ? Cette action est irréversible.')) return;
             const list = await getAccessList();
             await Promise.all(list.map(p => removeAccessPerson(p.id)));
+
+            // Log dans l'historique
+            try {
+                await addHistoryEntry({
+                    type: 'access_revoke_all',
+                    details: { count: list.length }
+                });
+            } catch (e) { console.warn('History log error:', e); }
+
             showToast('Tous les accès ont été révoqués.');
             renderAccessList(listEl);
         });

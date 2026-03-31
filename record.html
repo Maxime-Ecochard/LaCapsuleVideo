@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#2d7a4f" />
     <title>Enregistrement — Capsule Vidéo</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
 
@@ -44,7 +44,7 @@
                     </svg>
                     <span>Appuyez sur ● pour commencer</span>
                     
-                    <a href="tutoriel.html" class="btn btn-secondary btn-sm" style="margin-top:20px; font-weight:normal; background:white; color:var(--primary-color);">
+                    <a href="tutoriel.html" class="btn btn-secondary btn-sm" style="margin-top:20px; font-weight:500; background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.4); backdrop-filter:blur(4px);">
                         📖 Voir le tutoriel (Étapes conseillées)
                     </a>
                 </div>
@@ -132,7 +132,7 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { requireAuth, showToast, navigate, saveCapsule, getState } from './js/app.js';
+        import { requireAuth, showToast, navigate, saveCapsule, getState, addHistoryEntry, getNextCapsuleNumber } from './js/app.js';
         import { GuidedRecorder } from './js/recorder.js';
         import { encryptData } from './js/crypto.js';
 
@@ -291,6 +291,19 @@
                 });
 
                 showToast('✅ Capsule importée en toute sécurité !');
+
+                // Log dans l'historique
+                try {
+                    const capsuleNum = await getNextCapsuleNumber();
+                    await addHistoryEntry({
+                        type: 'import',
+                        details: {
+                            capsuleNumber: capsuleNum,
+                            duration: 0
+                        }
+                    });
+                } catch (e) { console.warn('History log error:', e); }
+
                 setTimeout(() => navigate('dashboard.html'), 1500);
             } catch (err) {
                 console.error(err);

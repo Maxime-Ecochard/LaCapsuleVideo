@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>Historique — Capsule Vidéo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .history-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--gray-200);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .history-icon.record {
+            background: #e8f5ee;
+        }
+
+        .history-icon.import {
+            background: #e3f2fd;
+        }
+
+        .history-icon.delete {
+            background: #fde8e8;
+        }
+
+        .history-icon.access_add {
+            background: #ede7f6;
+        }
+
+        .history-icon.access_remove {
+            background: #fff3e0;
+        }
+
+        .history-icon.access_revoke_all {
+            background: #fde8e8;
+        }
+
+        .history-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-action {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+
+        .history-meta {
+            font-size: 0.78rem;
+            color: var(--gray-400);
+        }
+
+        .history-date {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-align: right;
+            line-height: 1.4;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <button class="header-back" id="backBtn" title="Retour">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </button>
+            <div>
+                <h1>Historique</h1>
+                <span class="subtitle">Journal de vos actions</span>
+            </div>
+        </header>
+
+        <main class="page">
+            <div class="info-box" style="margin-bottom: 20px;">
+                📋 Retrouvez ici l'ensemble de vos actions&nbsp;: enregistrements, importations, suppressions de
+                capsules et gestion des accès.
+            </div>
+
+            <div class="card" id="historyList" style="padding: 12px 20px;">
+                <p style="color:var(--gray-400);font-size:0.85rem;text-align:center;padding:16px 0;">Chargement…</p>
+            </div>
+
+            <div id="clearSection" style="text-align:center; margin-top: 16px; display:none;">
+                <button class="btn btn-danger btn-sm" id="clearHistoryBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5zm2.5 0a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5z" />
+                    </svg>
+                    Vider l'historique
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { requireAuth, getHistory, clearHistory, showToast, navigate } from './js/app.js';
+
+        if (!requireAuth()) throw new Error('Not authenticated');
+
+        const listEl = document.getElementById('historyList');
+        const clearSection = document.getElementById('clearSection');
+
+        const ROLE_LABELS = {
+            soignant: 'Soignant(e)',
+            confiance: 'Personne de confiance',
+            famille: 'Famille / Proche'
+        };
+
+        const TYPE_CONFIG = {
+            record: {
+                icon: '🎬',
+                label: (d) => `Capsule n°${d.capsuleNumber || '?'} enregistrée`,
+                meta: (d) => d.duration ? `Durée\u00a0: ${formatTime(d.duration)}` : '',
+                css: 'record'
+            },
+            import: {
+                icon: '📥',
+                label: (d) => `Capsule n°${d.capsuleNumber || '?'} importée`,
+                meta: (d) => d.duration ? `Durée\u00a0: ${formatTime(d.duration)}` : 'Durée non disponible',
+                css: 'import'
+            },
+            delete: {
+                icon: '🗑️',
+                label: (d) => d.capsuleNumber ? `Capsule n°${d.capsuleNumber} supprimée` : 'Capsule supprimée',
+                meta: () => '',
+                css: 'delete'
+            },
+            access_add: {
+                icon: '➕',
+                label: (d) => `Contact ajouté\u00a0: ${d.contactName || '?'}`,
+                meta: (d) => d.role ? ROLE_LABELS[d.role] || d.role : '',
+                css: 'access_add'
+            },
+            access_remove: {
+                icon: '❌',
+                label: (d) => `Contact retiré\u00a0: ${d.contactName || '?'}`,
+                meta: (d) => d.role ? ROLE_LABELS[d.role] || d.role : '',
+                css: 'access_remove'
+            },
+            access_update: {
+                icon: '📝',
+                label: (d) => `Contact mis à jour\u00a0: ${d.contactName || '?'}`,
+                meta: (d) => d.role ? ROLE_LABELS[d.role] || d.role : '',
+                css: 'access_add'
+            },
+            access_revoke_all: {
+                icon: '⚠️',
+                label: (d) => `Tous les accès révoqués${d.count ? ` (${d.count})` : ''}`,
+                meta: () => '',
+                css: 'access_revoke_all'
+            }
+        };
+
+        async function renderHistory() {
+            try {
+                const entries = await getHistory();
+                listEl.innerHTML = '';
+
+                if (entries.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="video-empty" style="height:120px;">
+                            <p>Aucune action enregistrée pour le moment.</p>
+                        </div>`;
+                    clearSection.style.display = 'none';
+                    return;
+                }
+
+                clearSection.style.display = 'block';
+
+                entries.forEach((entry, i) => {
+                    const config = TYPE_CONFIG[entry.type] || {
+                        icon: '📌',
+                        label: () => entry.type,
+                        meta: () => '',
+                        css: 'record'
+                    };
+
+                    const details = entry.details || {};
+                    const date = new Date(entry.date);
+                    const dateStr = date.toLocaleDateString('fr-FR', {
+                        day: '2-digit', month: 'short', year: 'numeric'
+                    });
+                    const timeStr = date.toLocaleTimeString('fr-FR', {
+                        hour: '2-digit', minute: '2-digit'
+                    });
+
+                    const metaText = config.meta(details);
+
+                    const el = document.createElement('div');
+                    el.className = 'history-item';
+                    el.style.animationDelay = `${i * 0.05}s`;
+                    el.innerHTML = `
+                        <div class="history-icon ${config.css}">${config.icon}</div>
+                        <div class="history-details">
+                            <div class="history-action">${config.label(details)}</div>
+                            ${metaText ? `<div class="history-meta">${metaText}</div>` : ''}
+                        </div>
+                        <div class="history-date">${dateStr}<br>${timeStr}</div>
+                    `;
+                    listEl.appendChild(el);
+                });
+            } catch (err) {
+                console.error('Render history error:', err);
+                listEl.innerHTML = `
+                    <div class="video-empty" style="height:120px; color:var(--danger);">
+                        <p>Impossible de charger l'historique.<br>Veuillez réessayer.</p>
+                    </div>`;
+            }
+        }
+
+        renderHistory();
+
+        document.getElementById('clearHistoryBtn').addEventListener('click', async () => {
+            if (!confirm('Vider tout l\'historique\u00a0? Cette action est irréversible.')) return;
+            await clearHistory();
+            showToast('Historique vidé.');
+            renderHistory();
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            navigate('dashboard.html');
+        });
+
+        function formatTime(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+    </script>
+</body>
+
+</html>

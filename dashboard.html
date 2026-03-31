@@ -7,8 +7,52 @@
     <meta name="theme-color" content="#2d7a4f" />
     <title>Mon Tableau de Bord — Capsule Vidéo</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+        /* Tabs System */
+        .tabs-header {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: var(--gray-100);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 10px 4px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-radius: 9px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--green-dark);
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .meta-chip {
+            background: var(--green-pale);
+            color: var(--green-dark);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 99px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,7 +61,7 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo-wrap">
-                <img src="icons/NewLogo.png" alt="Logo" />
+                <img src="icons/LogoBleu.png" alt="Logo" />
             </div>
             <div>
                 <h1>Capsule Vidéo</h1>
@@ -57,9 +101,14 @@
                 </a>
             </div>
 
-            <!-- Current Capsule -->
-            <p class="section-title">Ma Capsule actuelle</p>
+            <!-- Current Capsules -->
+            <p class="section-title">Mes Capsules</p>
             <div class="card" id="capsuleCard">
+                <div id="tabsHeader" class="tabs-header" style="display:none;">
+                    <button class="tab-btn active" data-tab="0">Ma capsule actuelle</button>
+                    <button class="tab-btn" data-tab="1" id="prevTabBtn" style="display:none;">Capsule précédente</button>
+                </div>
+
                 <div class="video-empty" id="emptyState">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
                         viewBox="0 0 16 16">
@@ -68,6 +117,7 @@
                     </svg>
                     <p>Aucune capsule enregistrée.<br>Appuyez sur le bouton ci-dessus pour commencer.</p>
                 </div>
+                
                 <div id="playerGroup" style="display:none;">
                     <div class="video-container">
                         <video id="capsulePlayer" controls playsinline></video>
@@ -78,9 +128,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path
-                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5zm2.5 0a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5z" />
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0-1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5zm2.5 0a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5z" />
                         </svg>
-                        Supprimer cette capsule
+                        Supprimer cette version
                     </button>
                 </div>
             </div>
@@ -95,19 +145,30 @@
                 Les <strong>Directives Anticipées en Psychiatrie</strong> (DAP) vous permettent d'exprimer vos souhaits
                 concernant vos soins en cas de crise, quand vous n'êtes plus en mesure de le faire vous-même.
                 <div class="divider"></div>
-                <span style="color:var(--green-dark);font-weight:600;">Durée recommandée :</span> 2 à 5 minutes.<br>
-                <span style="color:var(--green-dark);font-weight:600;">Phases :</span> Identification · Pathologie ·
+                <span style="color:var(--green-dark);font-weight:600;">Durée recommandée&nbsp;:</span> 2 à 5 minutes.<br>
+                <span style="color:var(--green-dark);font-weight:600;">Phases&nbsp;:</span> Identification · Pathologie ·
                 Directives · Message d'espoir.
 
                 <div class="divider"></div>
-                <strong style="color:var(--primary-color);">Étape préalable : Vos DAP à l'écrit</strong><br>
+                <strong style="color:var(--primary-color);">Étape préalable&nbsp;: Vos DAP à l'écrit</strong><br>
                 Avant d'enregistrer votre capsule vidéo, il est recommandé de rédiger vos DAP. Vous pouvez utiliser le <a href="https://www.psycom.org/agir/la-defense-des-droits/kit-mon-gps/#telecharger-le-livret-mon-gps-697d5fd9e384f" target="_blank" rel="noopener" style="color:var(--primary-color);font-weight:600;text-decoration:underline;">Kit Mon GPS (Psycom)</a>.
                 
-                <p style="margin-top: 8px; margin-bottom: 4px; font-weight: 600;">Livrets interactifs remplissables :</p>
+                <p style="margin-top: 8px; margin-bottom: 4px; font-weight: 600;">Livrets interactifs remplissables&nbsp;:</p>
                 <ul style="margin: 0; padding-left: 20px;">
                     <li><strong>Adultes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_VF_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_PRISM_monGPS_NOTICE_Usagers.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
                     <li><strong>Ados/Jeunes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_ADOS_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2024/04/PSYCOM_GPS_ADO-JEUNES-ADULTES_Notice_Jeunes_DEF.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
                 </ul>
+            </div>
+
+            <div style="text-align:center; margin-top: 16px; margin-bottom: 8px;">
+                <a href="historique.html" class="btn btn-secondary btn-sm" style="display:inline-flex; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a7.007 7.007 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                    Historique des actions
+                </a>
             </div>
         </main>
 
@@ -149,7 +210,7 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { getState, requireAuth, clearState, getCapsule, deleteCapsule, showToast } from './js/app.js';
+        import { getState, requireAuth, clearState, getCapsules, deleteCapsule, showToast, addHistoryEntry } from './js/app.js';
         import { decryptData } from './js/crypto.js';
 
         if (!requireAuth()) throw new Error('Not authenticated');
@@ -157,18 +218,52 @@
         const state = getState();
         document.getElementById('heroName').textContent = state.name;
 
-        // Load existing capsule
-        async function loadCapsule() {
-            const record = await getCapsule(state.name);
-            if (!record) return;
+        let userCapsules = [];
+        let currentIdx = 0;
 
-            const emptyState = document.getElementById('emptyState');
-            const playerGroup = document.getElementById('playerGroup');
-            const player = document.getElementById('capsulePlayer');
-            const meta = document.getElementById('capsuleMeta');
+        const emptyState = document.getElementById('emptyState');
+        const playerGroup = document.getElementById('playerGroup');
+        const tabsHeader = document.getElementById('tabsHeader');
+        const prevTabBtn = document.getElementById('prevTabBtn');
+        const player = document.getElementById('capsulePlayer');
+        const meta = document.getElementById('capsuleMeta');
+
+        // Load existing capsules
+        async function loadCapsules() {
+            userCapsules = await getCapsules(state.name);
+            
+            if (userCapsules.length === 0) {
+                emptyState.style.display = 'flex';
+                playerGroup.style.display = 'none';
+                tabsHeader.style.display = 'none';
+                return;
+            }
 
             emptyState.style.display = 'none';
             playerGroup.style.display = 'block';
+            
+            if (userCapsules.length > 1) {
+                tabsHeader.style.display = 'flex';
+                prevTabBtn.style.display = 'block';
+            } else {
+                tabsHeader.style.display = 'none';
+            }
+
+            renderVersion(0);
+        }
+
+        async function renderVersion(idx) {
+            currentIdx = idx;
+            const record = userCapsules[idx];
+            if (!record) return;
+
+            // Mettre à jour les onglets
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === idx);
+            });
+
+            player.src = '';
+            meta.innerHTML = '<span class="meta-chip">Définition en cours...</span>';
 
             try {
                 const decrypted = await decryptData(record.encryptedVideo, state.pin);
@@ -176,26 +271,54 @@
                 player.src = URL.createObjectURL(blob);
 
                 const date = new Date(record.recordedAt).toLocaleDateString('fr-FR', {
-                    day: '2-digit', month: 'long', year: 'numeric'
+                    day: '2-digit', month: 'long', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
                 });
                 const dur = formatTime(record.duration || 0);
                 meta.innerHTML = `
-        <span class="meta-chip">📅 ${date}</span>
-        <span class="meta-chip">⏱ ${dur}</span>`;
-            } catch {
+                    <span class="meta-chip">📅 ${date}</span>
+                    <span class="meta-chip">⏱ ${dur}</span>
+                    <span class="meta-chip">${idx === 0 ? '✨ Actuelle' : '📂 Archivée'}</span>
+                `;
+            } catch (err) {
+                console.error(err);
                 showToast('⚠️ PIN incorrect — impossible de déchiffrer la capsule.');
             }
         }
 
-        loadCapsule();
+        loadCapsules();
+
+        // Tabs switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.tab);
+                if (idx !== currentIdx) renderVersion(idx);
+            });
+        });
 
         document.getElementById('recordBtn').addEventListener('click', () => {
             window.location.href = 'record.html';
         });
 
         document.getElementById('deleteBtn')?.addEventListener('click', async () => {
-            if (confirm('Supprimer définitivement votre capsule ? Cette action est irréversible.')) {
-                await deleteCapsule(state.name);
+            const currentRecord = userCapsules[currentIdx];
+            if (!currentRecord) return;
+
+            const label = currentIdx === 0 ? 'votre capsule ACTUELLE' : 'votre capsule PRÉCÉDENTE';
+            if (confirm(`Supprimer définitivement ${label} ? Cette action est irréversible.`)) {
+                await deleteCapsule(currentRecord.internalId);
+
+                // Log dans l'historique
+                try {
+                    await addHistoryEntry({
+                        type: 'delete',
+                        details: { 
+                            version: currentIdx === 0 ? 'actuelle' : 'précédente',
+                            capsuleNumber: currentRecord.capsuleNumber 
+                        }
+                    });
+                } catch (e) { console.warn('History log error:', e); }
+
                 showToast('Capsule supprimée.');
                 setTimeout(() => location.reload(), 1500);
             }

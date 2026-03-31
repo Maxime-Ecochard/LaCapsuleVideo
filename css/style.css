@@ -17,6 +17,9 @@
   --gray-400: #a0aab4;
   --gray-600: #6b7685;
   --gray-800: #2c3540;
+  --primary-color: #2d7a4f;
+  --secondary-color: #e8f5ee;
+  --text-color: #2c3540;
   --accent: #5cb87a;
   --danger: #e57373;
   --shadow-sm: 0 2px 8px rgba(45, 122, 79, 0.08);

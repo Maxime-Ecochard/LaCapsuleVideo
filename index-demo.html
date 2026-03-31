@@ -7,8 +7,8 @@
     <meta name="theme-color" content="#2d7a4f" />
     <title>Capsule Vidéo — Démo</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
-    <link rel="icon" href="icons/NewLogo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
+    <link rel="icon" href="icons/LogoBleu.png" type="image/png" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
         .demo-badge {
@@ -67,7 +67,7 @@
     <div class="login-page">
 
         <!-- Logo -->
-        <img src="icons/NewLogo.png" alt="Logo Capsule Vidéo" class="login-logo" />
+        <img src="icons/LogoBleu.png" alt="Logo Capsule Vidéo" class="login-logo" />
 
         <!-- Badge démo -->
         <span class="demo-badge">🎬 Mode démonstration</span>
@@ -139,9 +139,19 @@
 
     <div id="toast" class="toast"></div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', e => {
+    <script type="module">
+        import { seedDemoData } from './js/app.js';
+        
+        document.getElementById('loginForm').addEventListener('submit', async e => {
             e.preventDefault();
+            
+            // Initialiser les données de démo (Contacts, Historique)
+            try {
+                await seedDemoData();
+            } catch (err) {
+                console.error('Demo seed error:', err);
+            }
+
             // Stocker les infos démo en sessionStorage et rediriger
             sessionStorage.setItem('capsule_user', JSON.stringify({ name: 'Émilie', pin: '1234', demo: true }));
             window.location.href = 'dashboard-demo.html';

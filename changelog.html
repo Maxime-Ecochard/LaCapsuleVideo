@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2d7a4f" />
+    <title>Notes de Version — Capsule Vidéo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        .changelog-container {
+            padding: 20px;
+        }
+
+        .version-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .version-card.v3 { border-left-color: #3498db; }
+        .version-card.v2 { border-left-color: var(--primary-color); }
+        .version-card.v4 { border-left-color: #f39c12; border-style: dashed; }
+
+        .version-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .version-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .version-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tag-stable { background: #e8f5e9; color: #2e7d32; }
+        .tag-current { background: #e3f2fd; color: #1565c0; }
+        .tag-future { background: #fff3e0; color: #ef6c00; }
+
+        .change-category {
+            margin-top: 15px;
+        }
+
+        .change-category h3 {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .change-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .change-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-color);
+        }
+
+        .change-item::before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .badge-new { background: #4caf50; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; vertical-align: middle; }
+        .badge-fix { background: #f44336; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; vertical-align: middle; }
+        .badge-upd { background: #2196f3; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; vertical-align: middle; }
+    </style>
+</head>
+
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <button class="header-back" id="backBtn" title="Retour">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </button>
+            <div>
+                <h1>Notes de Version</h1>
+            </div>
+        </header>
+
+        <main class="page">
+            <div class="changelog-container">
+                
+                <!-- Version 4 -->
+                <div class="version-card v4">
+                    <div class="version-header">
+                        <span class="version-number">Version 4.0</span>
+                        <span class="version-tag tag-future">À venir</span>
+                    </div>
+                    <div class="change-category">
+                        <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3.5a.5.5 0 0 1-.5-.5v-4A.5.5 0 0 1 8 4z"/></svg> Prochaines étapes</h3>
+                        <ul class="change-list">
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Mode Téléprompteur</strong> : Saisissez votre script directement dans l'application.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Superposition Vidéo</strong> : Affichez votre texte en transparence pendant l'enregistrement pour ne rien oublier.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Version 3 -->
+                <div class="version-card v3">
+                    <div class="version-header">
+                        <span class="version-number">Version 3.0</span>
+                        <span class="version-tag tag-current">Actuelle</span>
+                    </div>
+                    <div class="change-category">
+                        <h3>Fonctionnalités</h3>
+                        <ul class="change-list">
+                            <li class="change-item">Historique complet des capsules avec accès à la version la plus récente.</li>
+                            <li class="change-item">Journal d'activités détaillé (enregistrements, gestion des contacts).</li>
+                            <li class="change-item">Mise à jour dynamique des contacts de confiance.</li>
+                        </ul>
+                    </div>
+                    <div class="change-category">
+                        <h3>Interface & Sécurité</h3>
+                        <ul class="change-list">
+                            <li class="change-item"><span class="badge-upd">UPD</span> Nouveau logo avec dégradé bleu.</li>
+                            <li class="change-item"><span class="badge-upd">UPD</span> Refonte de l'onglet "Accès" pour un usage facilité en urgence.</li>
+                            <li class="change-item"><span class="badge-fix">FIX</span> Corrections orthographiques et mise à jour de la section "À propos".</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Version 2 -->
+                <div class="version-card v2">
+                    <div class="version-header">
+                        <span class="version-number">Version 2.0</span>
+                        <span class="version-tag tag-stable">Stable</span>
+                    </div>
+                    <div class="change-category">
+                        <h3>Enregistrement</h3>
+                        <ul class="change-list">
+                            <li class="change-item"><span class="badge-new">NEW</span> Importation de vidéos depuis la galerie avec horodatage.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> Option de pause pendant l'enregistrement direct.</li>
+                            <li class="change-item"><span class="badge-fix">FIX</span> Sauvegarde locale automatique (résolution des erreurs de stockage).</li>
+                        </ul>
+                    </div>
+                    <div class="change-category">
+                        <h3>Accompagnement</h3>
+                        <ul class="change-list">
+                            <li class="change-item">Tutoriel interactif complet (Écrit, Audio, Vidéo avec avatar).</li>
+                            <li class="change-item">Intégration de la ressource "DAP mon GPS" pour préparer son script.</li>
+                            <li class="change-item">Création de la section "À propos" et formulaire de contact.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Version 1 -->
+                <div class="version-card v1" style="border-left-color: #95a5a6; opacity: 0.8;">
+                    <div class="version-header">
+                        <span class="version-number">Version 1.0</span>
+                        <span class="version-tag tag-stable">MVP</span>
+                    </div>
+                    <div class="change-category">
+                        <h3>Fondations</h3>
+                        <ul class="change-list">
+                            <li class="change-item">Mise en place de l'enregistrement vidéo direct via caméra.</li>
+                            <li class="change-item">Système de stockage sécurisé local (IndexedDB).</li>
+                            <li class="change-item">Gestion basique des contacts de confiance.</li>
+                            <li class="change-item">Configuration PWA pour installation sur mobile.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('backBtn').addEventListener('click', () => {
+            if (document.referrer && document.referrer.includes('about.html')) {
+                window.history.back();
+            } else {
+                window.location.href = 'about.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

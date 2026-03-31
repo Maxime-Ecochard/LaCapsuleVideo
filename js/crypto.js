@@ -39,7 +39,7 @@ export async function encryptData(buffer, pin) {
     return {
         salt: bufToB64(salt),
         iv: bufToB64(iv),
-        data: bufToB64(ciphertext)
+        data: ciphertext // Store ArrayBuffer directly
     };
 }
 
@@ -47,7 +47,9 @@ export async function encryptData(buffer, pin) {
 export async function decryptData(encrypted, pin) {
     const salt = b64ToBuf(encrypted.salt);
     const iv = b64ToBuf(encrypted.iv);
-    const data = b64ToBuf(encrypted.data);
+    // Legacy support for older capsules that were base64 encoded
+    const data = typeof encrypted.data === 'string' ? b64ToBuf(encrypted.data) : encrypted.data;
+    
     const key = await deriveKey(pin, salt);
 
     return crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);

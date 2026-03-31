@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#2d7a4f" />
     <title>Mon Tableau de Bord — Capsule Vidéo (Démo)</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="icons/NewLogo.png" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
         .demo-ribbon {
@@ -49,6 +49,49 @@
             background: #6dff9e;
             animation: blink 2s ease-in-out infinite;
         }
+
+        /* Tabs System - Copied from main dashboard */
+        .tabs-header {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: var(--gray-100);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 10px 4px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-radius: 9px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--green-dark);
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .meta-chip {
+            background: var(--green-pale);
+            color: var(--green-dark);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 99px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
     </style>
 </head>
 
@@ -64,7 +107,7 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo-wrap">
-                <img src="icons/NewLogo.png" alt="Logo" />
+                <img src="icons/LogoBleu.png" alt="Logo" />
             </div>
             <div>
                 <h1>Capsule Vidéo</h1>
@@ -111,32 +154,37 @@
                 </a>
             </div>
 
-            <!-- Current Capsule -->
-            <p class="section-title">Ma Capsule actuelle</p>
+            <!-- Current Capsules -->
+            <p class="section-title">Mes Capsules</p>
             <div class="card" id="capsuleCard">
+                <div id="tabsHeader" class="tabs-header">
+                    <button class="tab-btn active" data-tab="active">Ma capsule actuelle</button>
+                    <button class="tab-btn" data-tab="previous">Capsule précédente</button>
+                </div>
+
                 <div id="playerGroup">
                     <div class="video-container">
                         <video id="capsulePlayer" src="DAP Emilie 10:01:2026.mp4" controls playsinline
                             preload="metadata">
                         </video>
                     </div>
-                    <div class="capsule-meta mt-8">
-                        <span class="meta-chip">📅 10 janvier 2026</span>
+                    <div class="capsule-meta mt-8" id="capsuleMeta">
+                        <span class="meta-chip" id="dateChip">📅 10 février 2026</span>
                         <span class="meta-chip" id="durationChip">⏱ …</span>
-                        <span class="meta-chip">🎬 Démo</span>
+                        <span class="meta-chip" id="versionChip">✨ Actuelle</span>
                     </div>
                     <div class="divider"></div>
                     <div class="info-box" style="margin-bottom:12px;">
                         ℹ️ En mode démo, la vidéo est chargée directement — dans la version réelle, elle est chiffrée
                         avec votre PIN et ne quitte jamais votre appareil.
                     </div>
-                    <button class="btn btn-danger btn-sm" id="deleteBtn" style="width:100%;" disabled>
+                    <button class="btn btn-danger btn-sm" id="deleteBtn" style="width:100%;" disabled title="Indisponible en demo">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             viewBox="0 0 16 16">
                             <path
                                 d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5zm2.5 0a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V5z" />
                         </svg>
-                        Supprimer (désactivé en démo)
+                        Supprimer cette version
                     </button>
                 </div>
             </div>
@@ -160,6 +208,17 @@
                     <li><strong>Adultes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_VF_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_PRISM_monGPS_NOTICE_Usagers.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
                     <li><strong>Ados/Jeunes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_ADOS_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2024/04/PSYCOM_GPS_ADO-JEUNES-ADULTES_Notice_Jeunes_DEF.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
                 </ul>
+            </div>
+
+            <div style="text-align:center; margin-top: 16px; margin-bottom: 8px;">
+                <a href="historique.html" class="btn btn-secondary btn-sm" style="display:inline-flex; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a7.007 7.007 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                    Historique des actions
+                </a>
             </div>
 
         </main>
@@ -202,15 +261,41 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // Lire la durée réelle de la vidéo une fois chargée
+        // Fake previous version meta
+        const VERSIONS = {
+            active: { date: '10 février 2026', title: '✨ Actuelle' },
+            previous: { date: '08 janvier 2026', title: '📂 Archivée' }
+        };
+
         const player = document.getElementById('capsulePlayer');
         const durationChip = document.getElementById('durationChip');
+        const dateChip = document.getElementById('dateChip');
+        const versionChip = document.getElementById('versionChip');
 
+        // Reading duration
         player.addEventListener('loadedmetadata', () => {
             const sec = Math.round(player.duration);
             const m = String(Math.floor(sec / 60)).padStart(2, '0');
             const s = String(sec % 60).padStart(2, '0');
             durationChip.textContent = `⏱ ${m}:${s}`;
+        });
+
+        // Tabs logic in Demo
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.dataset.tab;
+                
+                // Toggle active state
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+                
+                // Change meta
+                dateChip.textContent = `📅 ${VERSIONS[type].date}`;
+                versionChip.textContent = VERSIONS[type].title;
+                
+                // Simulate loading another video (same file but reset)
+                player.currentTime = 0;
+                player.play().catch(() => {});
+            });
         });
 
         // Déconnexion → retour à la page démo
