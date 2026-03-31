@@ -333,9 +333,9 @@ export async function seedDemoData() {
 
     // 1. Ajouter les contacts fictifs (Frank, Eva, Sam)
     const contacts = [
-        { name: 'Frank PARLER', role: 'confiance', contact: 'f.parler@avocat.fr', addedAt: '2026-01-10T09:00:00Z', userId: 'Émilie' },
-        { name: 'Eva VEILLER', role: 'famille', contact: 'eva@famille.fr', addedAt: '2026-01-12T14:30:00Z', userId: 'Émilie' },
-        { name: 'Sam SOUCI', role: 'soignant', contact: 'Dr. Sam Souci - CMP Centre', addedAt: '2026-02-05T11:15:00Z', userId: 'Émilie' }
+        { name: 'Frank PARLER', role: 'confiance', email: 'f.parler@avocat.fr', phone: '06 12 34 56 78', addedAt: '2026-01-10T09:00:00Z', userId: 'Émilie' },
+        { name: 'Eva VEILLER', role: 'famille', email: 'eva@famille.fr', addedAt: '2026-01-12T14:30:00Z', userId: 'Émilie' },
+        { name: 'Sam SOUCI', role: 'soignant', phone: '04 67 00 11 22', addedAt: '2026-02-05T11:15:00Z', userId: 'Émilie' }
     ];
     
     for (const c of contacts) {

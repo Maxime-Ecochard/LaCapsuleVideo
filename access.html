@@ -60,9 +60,15 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="acc-contact">Contact (optionnel)</label>
-                        <input type="text" id="acc-contact" placeholder="Téléphone ou email" maxlength="80" />
+                    <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label for="acc-email">Email (optionnel)</label>
+                            <input type="email" id="acc-email" placeholder="mail@exemple.fr" maxlength="80" />
+                        </div>
+                        <div class="form-group">
+                            <label for="acc-phone">Téléphone (optionnel)</label>
+                            <input type="tel" id="acc-phone" placeholder="06.." maxlength="30" />
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-full" id="submitBtn">

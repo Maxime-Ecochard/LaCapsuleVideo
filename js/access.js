@@ -27,11 +27,19 @@ export async function renderAccessList(containerEl) {
         const initials = person.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
         const el = document.createElement('div');
         el.className = 'access-person';
+        let contactHtml = '';
+        if (person.email) contactHtml += `<div class="contact">✉️ ${escHtml(person.email)}</div>`;
+        if (person.phone) contactHtml += `<div class="contact">📞 ${escHtml(person.phone)}</div>`;
+        // Compatibilité avec l'ancien champ 'contact'
+        if (person.contact && !person.email && !person.phone) {
+            contactHtml += `<div class="contact">${escHtml(person.contact)}</div>`;
+        }
+
         el.innerHTML = `
       <div class="avatar">${initials}</div>
       <div class="access-info">
         <div class="name">${escHtml(person.name)}</div>
-        <div class="contact">${escHtml(person.contact || '')}</div>
+        ${contactHtml}
         <span class="access-badge ${role.badge} mt-8">${role.label}</span>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px;">
@@ -76,14 +84,15 @@ export async function handleAddPerson(form, listContainer) {
     const id = form.querySelector('#acc-id').value;
     const name = form.querySelector('#acc-name').value.trim();
     const role = form.querySelector('#acc-role').value;
-    const contact = form.querySelector('#acc-contact').value.trim();
+    const email = form.querySelector('#acc-email').value.trim();
+    const phone = form.querySelector('#acc-phone').value.trim();
 
     if (!name) { showToast('Veuillez saisir un nom.'); return; }
     if (!role) { showToast('Veuillez choisir un rôle.'); return; }
 
     if (id) {
         // Mise à jour
-        await updateAccessPerson(Number(id), { name, role, contact });
+        await updateAccessPerson(Number(id), { name, role, email, phone });
         try {
             await addHistoryEntry({
                 type: 'access_update',
@@ -93,7 +102,7 @@ export async function handleAddPerson(form, listContainer) {
         showToast(`✅ ${name} mis(e) à jour.`);
     } else {
         // Ajout
-        await addAccessPerson({ name, role, contact, addedAt: new Date().toISOString() });
+        await addAccessPerson({ name, role, email, phone, addedAt: new Date().toISOString() });
         try {
             await addHistoryEntry({
                 type: 'access_add',
@@ -112,7 +121,13 @@ export function editAccessPerson(person) {
     form.querySelector('#acc-id').value = person.id;
     form.querySelector('#acc-name').value = person.name;
     form.querySelector('#acc-role').value = person.role;
-    form.querySelector('#acc-contact').value = person.contact || '';
+    form.querySelector('#acc-email').value = person.email || '';
+    form.querySelector('#acc-phone').value = person.phone || '';
+    // Si la personne a un vieux champ contact mais pas les nouveaux, on peut éventuellement le copier quelque part ou l'ignorer en édition.
+    if (person.contact && !person.email && !person.phone) {
+        // On le met par défaut dans le mail si ça ressemble à un mail, sinon téléphone ?
+        // Mais restons simples: si c'est un vieil objet, l'utilisateur devra reremplir proprement ou on laisse vide.
+    }
 
     form.querySelector('#submitBtnText').textContent = 'Enregistrer les modifications';
     document.getElementById('cancelEdit').style.display = 'block';
