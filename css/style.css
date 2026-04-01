@@ -957,3 +957,25 @@ textarea:focus {
   color: var(--blue-dark);
   margin-bottom: 8px;
 }
+
+.capsule-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 99px;
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  margin-top: 8px;
+}
+
+.capsule-status-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6dff9e;
+  animation: blink 2s ease-in-out infinite;
+}
