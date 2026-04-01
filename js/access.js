@@ -140,7 +140,7 @@ export function editAccessPerson(person) {
 
     form.querySelector('#submitBtnText').textContent = 'Enregistrer les modifications';
     document.getElementById('cancelEdit').style.display = 'block';
-    
+
     // Défiler vers le formulaire
     form.closest('.card').scrollIntoView({ behavior: 'smooth' });
 }
@@ -159,7 +159,7 @@ function escHtml(str) {
 export async function handleNotify(person) {
     const profile = await getUserProfile();
     const senderName = profile ? `${profile.firstName} ${profile.lastName}`.trim() : 'Un contact';
-    const message = `${senderName} vient de vous donner accès à sa **Capsule Vidéo pour le Rétablissement**.
+    const message = `${senderName} vient de vous donner accès à sa Capsule Vidéo pour le Rétablissement.
 
 Merci de la visionner avec bienveillance, dans le respect de la confidentialité et de l’usage thérapeutique de ce support.
 
@@ -168,14 +168,14 @@ Cette capsule a été réalisée en période de stabilité afin de transmettre d
 En cas d’urgence ou de situation préoccupante, vous êtes autorisé(e) à la montrer au personnel soignant, ainsi qu’à ${senderName} s'il/elle n’y a plus accès, afin de faciliter la compréhension de ses besoins et l’accompagnement.
 
 Voici le lien de la capsule vidéo : {futur lien de partage pour le jour où les capsules seront également stockées sur un serveur}`;
-    
+
     const canEmail = !!person.email;
     const canSms = !!person.phone;
 
     try {
         if (navigator.share) {
             await navigator.share({
-                title: 'Capsule Vidéo',
+                title: 'Capsule Vidéo pour le Rétablissement',
                 text: message
             });
             showToast('Message prêt à être envoyé.');
