@@ -12,53 +12,49 @@ const PHASES = [
     {
         id: 'identification',
         label: '🪪 Identification, Date, Pathologie & Traitement',
-        /*
-        prompts: [
+
+        prompts: [/*
             'Bonjour, mon nom est {name}, nous sommes le {date}.',
             'J\'enregistre mes directives anticipées en psychiatrie.',
             'Ma pathologie principale est…',
-            'Mon traitement actuel est…',
+            'Mon traitement actuel est…',*/
         ],
-        */
         duration: 40  // seconds
     },
     {
         id: 'pathologie',
         label: '🧠 Signes d\'alertes, Repères, Souhaits, Ressources',
-        /*
-        prompts: [
+
+        prompts: [/*
             'Quand je vais moins bien, mes signes d\'alerte sont…',
             'Ce qui m\'aide à garder l\'équilibre et mes repères sont…',
             'En cas de difficulté ou de crise, mes souhaits sont…',
-            'Mes ressources et personnes ressources sont…',
+            'Mes ressources et personnes ressources sont…',*/
         ],
-        */
         duration: 60
     },
     {
         id: 'directives',
         label: '📋 Mes Directives de Soins',
-        /*
-        prompts: [
+
+        prompts: [/*
             'En cas de crise, je souhaite que l\'on…',
             'Je refuse expressément…',
             'Mon traitement habituel est…',
-            'Ma personne de confiance est…',
+            'Ma personne de confiance est…',*/
         ],
-        */
         duration: 90
     },
     {
         id: 'espoir',
         label: '💙 Mon Message d\'Espoir',
-        /*
-        prompts: [
+
+        prompts: [/*
             'À toi, moi du futur, je veux te dire…',
             'Tu as traversé des moments difficiles avant, et tu t\'en es sorti(e).',
             'Voici ce qui m\'a aidé à tenir : …',
-            'Je crois en toi. Tu es plus fort(e) que tu ne le crois.',
+            'Je crois en toi. Tu es plus fort(e) que tu ne le crois.',*/
         ],
-        */
         duration: 45
     }
 ];
@@ -291,7 +287,7 @@ export class GuidedRecorder {
 
             const buffer = await blob.arrayBuffer();
             const encrypted = await encryptData(buffer, pin);
-            
+
             const capsuleNum = await getNextCapsuleNumber();
 
             await saveCapsule({
