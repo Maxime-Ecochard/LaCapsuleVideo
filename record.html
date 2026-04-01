@@ -122,7 +122,7 @@
             <div class="prompts-panel">
                 <h3>Guide — phases de l'enregistrement</h3>
                 <ul class="prompt-list" id="promptList">
-                    <li id="li0">🪪 Identification, Date, Pathologie et Traitement</li>
+                    <li id="li0">🪪 Identification, Date, Pathologie & Traitement</li>
                     <li id="li1">🧠 Signes d'alertes, Repères, Souhaits, Ressources en cas de crise</li>
                     <li id="li2">📋 Mes Directives de Soins</li>
                     <li id="li3">💙 Mon Message d'Espoir</li>
@@ -284,6 +284,8 @@
                 const buffer = await file.arrayBuffer();
                 const encrypted = await encryptData(buffer, state.pin);
 
+                const capsuleNum = await getNextCapsuleNumber();
+
                 let recordedAt = new Date(dateVal);
                 if (dateVal === today) {
                     recordedAt = new Date();
@@ -294,14 +296,14 @@
                     encryptedVideo: encrypted,
                     mimeType: file.type || 'video/webm', // Fallback type
                     duration: 0,
-                    recordedAt: recordedAt.toISOString()
+                    recordedAt: recordedAt.toISOString(),
+                    capsuleNumber: capsuleNum
                 });
 
                 showToast('✅ Capsule importée en toute sécurité !');
 
                 // Log dans l'historique
                 try {
-                    const capsuleNum = await getNextCapsuleNumber();
                     await addHistoryEntry({
                         type: 'import',
                         details: {

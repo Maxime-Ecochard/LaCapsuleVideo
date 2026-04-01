@@ -291,20 +291,22 @@ export class GuidedRecorder {
 
             const buffer = await blob.arrayBuffer();
             const encrypted = await encryptData(buffer, pin);
+            
+            const capsuleNum = await getNextCapsuleNumber();
 
             await saveCapsule({
                 id: userId,
                 encryptedVideo: encrypted,
                 mimeType: blob.type,
                 duration: this.elapsedSec,
-                recordedAt: new Date().toISOString()
+                recordedAt: new Date().toISOString(),
+                capsuleNumber: capsuleNum
             });
 
             showToast('✅ Capsule sauvegardée en toute sécurité !');
 
             // Log dans l'historique
             try {
-                const capsuleNum = await getNextCapsuleNumber();
                 await addHistoryEntry({
                     type: 'record',
                     details: {
