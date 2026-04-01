@@ -54,11 +54,12 @@ export function showToast(message, duration = 2800) {
 // ── IndexedDB ──────────────────────────────────────────────────────────────
 
 const DB_NAME = 'CapsuleVideoDB';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 const STORE_CAPS = 'capsules';
 const STORE_ACC = 'access';
 const STORE_HIST = 'history';
 const STORE_META = 'meta';
+const STORE_PROFILES = 'profiles';
 
 function openDB() {
     return new Promise((resolve, reject) => {
@@ -113,6 +114,13 @@ function openDB() {
                     histStore.clear();
                 }
             }
+
+            // v5 migration : Profil utilisateur (Faisons Connaissance)
+            if (e.oldVersion < 5) {
+                if (!db.objectStoreNames.contains(STORE_PROFILES)) {
+                    db.createObjectStore(STORE_PROFILES, { keyPath: 'userId' });
+                }
+            }
         };
         req.onsuccess = e => resolve(e.target.result);
         req.onerror = e => reject(e.target.error);
@@ -124,15 +132,18 @@ export async function saveCapsule(capsule) {
     const db = await openDB();
     const userId = capsule.id;
 
-    // 1. Récupérer les capsules existantes pour limiter à 2
-    const existing = await getCapsules(userId);
+    // 1. Nettoyer les capsules trop vieilles (>48h)
+    await cleanupCapsules();
+
+    // 2. Récupérer les capsules existantes pour limiter à 2 actives
+    const existing = await getCapsules(userId, false);
     if (existing.length >= 2) {
-        // Supprimer la plus ancienne (fin de liste si trié par date DESC)
+        // Supprimer logiquement la plus ancienne (fin de liste si trié par date DESC)
         const oldest = existing[existing.length - 1];
-        await deleteCapsule(oldest.internalId);
+        await softDeleteCapsule(oldest.internalId);
     }
 
-    // 2. Enregistrer la nouvelle
+    // 3. Enregistrer la nouvelle
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_CAPS, 'readwrite');
         tx.objectStore(STORE_CAPS).add(capsule);
@@ -142,8 +153,11 @@ export async function saveCapsule(capsule) {
 }
 
 /** Retrieves sorted capsules by user id (most recent first) */
-export async function getCapsules(userId) {
+export async function getCapsules(userId, includeTrashed = false) {
     const db = await openDB();
+    // On nettoie au passage
+    cleanupCapsules().catch(e => console.warn(e));
+    
     return new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_CAPS, 'readonly');
         const store = tx.objectStore(STORE_CAPS);
@@ -151,7 +165,10 @@ export async function getCapsules(userId) {
         const req = index.getAll(userId);
 
         req.onsuccess = () => {
-            const list = req.result || [];
+            let list = req.result || [];
+            if (!includeTrashed) {
+                list = list.filter(c => !c.deletedAt);
+            }
             // Trier par date décroissante (plus récent en haut)
             list.sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
             resolve(list);
@@ -175,6 +192,89 @@ export async function deleteCapsule(internalId) {
         tx.oncomplete = resolve;
         tx.onerror = e => reject(e.target.error);
     });
+}
+
+export async function softDeleteCapsule(internalId) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_CAPS, 'readwrite');
+        const store = tx.objectStore(STORE_CAPS);
+        const req = store.get(internalId);
+        req.onsuccess = () => {
+            const capsule = req.result;
+            if (capsule) {
+                capsule.deletedAt = new Date().toISOString();
+                store.put(capsule);
+            }
+        };
+        tx.oncomplete = resolve;
+        tx.onerror = e => reject(e.target.error);
+    });
+}
+
+export async function restoreCapsule(internalId) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_CAPS, 'readwrite');
+        const store = tx.objectStore(STORE_CAPS);
+        const req = store.get(internalId);
+        req.onsuccess = () => {
+            const capsule = req.result;
+            if (capsule) {
+                delete capsule.deletedAt;
+                store.put(capsule);
+            }
+        };
+        tx.oncomplete = resolve;
+        tx.onerror = e => reject(e.target.error);
+    });
+}
+
+export async function getTrashedCapsules(userId) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_CAPS, 'readonly');
+        const store = tx.objectStore(STORE_CAPS);
+        const index = store.index('userId');
+        const req = index.getAll(userId);
+
+        req.onsuccess = () => {
+            let list = req.result || [];
+            list = list.filter(c => !!c.deletedAt);
+            list.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
+            resolve(list);
+        };
+        req.onerror = e => reject(e.target.error);
+    });
+}
+
+export async function cleanupCapsules() {
+    try {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_CAPS, 'readwrite');
+            const store = tx.objectStore(STORE_CAPS);
+            const req = store.getAll();
+
+            req.onsuccess = () => {
+                const list = req.result || [];
+                const now = new Date();
+                list.forEach(capsule => {
+                    if (capsule.deletedAt) {
+                        const deletedDate = new Date(capsule.deletedAt);
+                        const diffHours = (now - deletedDate) / (1000 * 60 * 60);
+                        if (diffHours > 48) {
+                            store.delete(capsule.internalId);
+                        }
+                    }
+                });
+            };
+            tx.oncomplete = resolve;
+            tx.onerror = e => reject(e.target.error);
+        });
+    } catch(e) {
+        console.warn('Cleanup error:', e);
+    }
 }
 
 /** Access list CRUD scoping by userId */
@@ -304,6 +404,34 @@ export async function clearHistory() {
     });
 }
 
+// ── User Profile ───────────────────────────────────────────────────────────
+
+export async function getUserProfile(userId) {
+    const db = await openDB();
+    const uid = userId || getState().name;
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_PROFILES, 'readonly');
+        const store = tx.objectStore(STORE_PROFILES);
+        const req = store.get(uid);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = e => reject(e.target.error);
+    });
+}
+
+export async function saveUserProfile(profileData) {
+    const db = await openDB();
+    const state = getState();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_PROFILES, 'readwrite');
+        tx.objectStore(STORE_PROFILES).put({
+            ...profileData,
+            userId: profileData.userId || state.name || ''
+        });
+        tx.oncomplete = resolve;
+        tx.onerror = e => reject(e.target.error);
+    });
+}
+
 // ── Service Worker registration ────────────────────────────────────────────
 
 export function registerSW() {
@@ -318,18 +446,27 @@ export function registerSW() {
  */
 export async function seedDemoData() {
     const db = await openDB();
-    
+
     // Vérifier si des données existent déjà pour l'utilisateur de démo
     const tx = db.transaction(STORE_HIST, 'readonly');
     const store = tx.objectStore(STORE_HIST);
     const index = store.index('userId');
     const req = index.getAll('Émilie');
-    
+
     const existing = await new Promise(r => {
         req.onsuccess = () => r(req.result);
     });
-    
-    if (existing && existing.length > 0) return; 
+
+    if (existing && existing.length > 0) return;
+
+    // 0. Ajouter le profil fictif pour Émilie
+    await saveUserProfile({
+        userId: 'Émilie',
+        firstName: 'Émilie',
+        lastName: 'André',
+        email: 'emilie.a@example.com',
+        phone: '06 12 34 56 78'
+    });
 
     // 1. Ajouter les contacts fictifs (Frank, Eva, Sam)
     const contacts = [
@@ -337,7 +474,7 @@ export async function seedDemoData() {
         { name: 'Eva VEILLER', role: 'famille', email: 'eva@famille.fr', addedAt: '2026-01-12T14:30:00Z', userId: 'Émilie' },
         { name: 'Sam SOUCI', role: 'soignant', phone: '04 67 00 11 22', addedAt: '2026-02-05T11:15:00Z', userId: 'Émilie' }
     ];
-    
+
     for (const c of contacts) {
         await addAccessPerson(c);
     }
@@ -352,7 +489,7 @@ export async function seedDemoData() {
         { type: 'access_add', date: '2026-02-05T11:20:00Z', details: { contactName: 'Sam SOUCI', role: 'soignant' }, userId: 'Émilie' },
         { type: 'record', date: '2026-02-10T09:00:00Z', details: { capsuleNumber: 3, duration: 210 }, userId: 'Émilie' }
     ];
-    
+
     for (const h of history) {
         await addHistoryEntry(h);
     }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#2d7a4f" />
+    <meta name="theme-color" content="#1e4a7a" />
     <title>Gestion des Accès — Capsule Vidéo</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
@@ -87,7 +87,7 @@
 
             <!-- Note légale -->
             <div class="card-muted" style="font-size:0.8rem;color:var(--gray-600);line-height:1.6;">
-                <strong style="color:var(--green-dark);">📋 Note&nbsp;:</strong> Les accès définis ici sont indicatifs et
+                <strong style="color:var(--blue-dark);">📋 Note&nbsp;:</strong> Les accès définis ici sont indicatifs et
                 stockés localement sur votre appareil.
             </div>
 
@@ -102,6 +102,36 @@
             </div>
 
         </main>
+
+        <!-- Friction Modal -->
+        <div class="modal-overlay" id="frictionModal">
+            <div class="modal-content">
+                <h2 class="modal-title" style="color:var(--danger)">Vérification de sécurité ⚠️</h2>
+                <p style="font-size:0.85rem; color:var(--gray-600); margin-bottom: 20px;" id="frictionMessage">
+                    Pour éviter toute suppression accidentelle, veuillez confirmer votre identité.
+                </p>
+                <form id="frictionForm">
+                    <div class="form-group">
+                        <label for="frict-email">Re-saisissez votre Email (celui du profil)</label>
+                        <input type="email" id="frict-email" placeholder="Email exact" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="frict-pin">Code PIN (4 chiffres)</label>
+                        <input type="tel" id="frict-pin" placeholder="••••" maxlength="4" required style="-webkit-text-security: disc; letter-spacing: 0.2em; font-size:1.2rem; text-align:center;" />
+                    </div>
+                    <div id="frictionCheckGroup" style="display:none; margin-bottom: 12px; background:var(--blue-pale); padding:10px; border-radius:8px;">
+                        <label style="display:flex; align-items:flex-start; gap:8px; font-weight:normal; font-size:0.8rem; color:var(--blue-dark); cursor:pointer; margin:0;">
+                            <input type="checkbox" id="frict-keepLastContact" checked style="width:18px; height:18px; margin-top:2px;" />
+                            <span style="flex:1;">Conserver le dernier contact ajouté (<span id="lastContactName"></span>) en ultime secours.</span>
+                        </label>
+                    </div>
+                    <div style="display:flex; gap:12px; margin-top:20px;">
+                        <button type="button" class="btn btn-secondary btn-full" id="closeFrictionBtn" style="background:var(--gray-200); color:var(--gray-600); border:none;">Annuler</button>
+                        <button type="submit" class="btn btn-danger btn-full" id="submitFrictionBtn">Confirmer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Bottom Nav -->
         <nav class="bottom-nav">
@@ -142,45 +172,118 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { requireAuth, showToast, addHistoryEntry } from './js/app.js';
+        import { requireAuth, showToast, addHistoryEntry, getUserProfile, getState, getAccessList, removeAccessPerson } from './js/app.js';
         import { renderAccessList, handleAddPerson, cancelEdit } from './js/access.js';
-        import { getAccessList, removeAccessPerson } from './js/app.js';
 
         if (!requireAuth()) throw new Error('Not authenticated');
 
+        const state = getState();
         const listEl = document.getElementById('accessList');
         const addForm = document.getElementById('addPersonForm');
 
-        // Initial render
         renderAccessList(listEl);
 
-        // Add/Update form
         addForm.addEventListener('submit', async e => {
             e.preventDefault();
             await handleAddPerson(addForm, listEl);
         });
 
-        // Cancel edit
         document.getElementById('cancelEdit').addEventListener('click', () => {
             cancelEdit(addForm);
         });
 
+        // Friction Logic setup
+        let frictionAction = null; 
+        const frictionModal = document.getElementById('frictionModal');
+        const frictionForm = document.getElementById('frictionForm');
+
+        window.requestFrictionVerification = async function(onConfirmCallback, messageTitle, btnText, list) {
+            const profile = await getUserProfile(state.name);
+            if (!profile || !profile.email) {
+                showToast("Veuillez d'abord configurer un Email dans votre profil (sur l'accueil) pour valider cette action de sécurité.");
+                return;
+            }
+
+            const checkGroup = document.getElementById('frictionCheckGroup');
+            if (list && list.length > 0) {
+                const sortedList = [...list].sort((a,b) => new Date(b.addedAt || 0) - new Date(a.addedAt || 0));
+                const lastContact = sortedList[0];
+                document.getElementById('lastContactName').textContent = lastContact.name;
+                checkGroup.style.display = 'block';
+                frictionAction = () => onConfirmCallback(document.getElementById('frict-keepLastContact').checked, lastContact);
+            } else {
+                checkGroup.style.display = 'none';
+                frictionAction = onConfirmCallback;
+            }
+
+            document.getElementById('frictionMessage').innerText = messageTitle || "Veuillez confirmer votre identité.";
+            document.getElementById('submitFrictionBtn').innerText = btnText || "Confirmer";
+            document.getElementById('frict-email').value = '';
+            document.getElementById('frict-pin').value = '';
+            frictionModal.style.display = 'flex';
+        };
+
+        frictionForm.addEventListener('submit', async e => {
+            e.preventDefault();
+            const emailInput = document.getElementById('frict-email').value.trim();
+            const pinInput = document.getElementById('frict-pin').value.trim();
+            const profile = await getUserProfile(state.name);
+            
+            if (emailInput.toLowerCase() !== profile.email.toLowerCase()) {
+                showToast("L'adresse email ne correspond pas à celle de votre profil.");
+                return;
+            }
+            if (pinInput !== state.pin) {
+                showToast("Le code PIN est incorrect.");
+                return;
+            }
+            frictionModal.style.display = 'none';
+            if (frictionAction) {
+                frictionAction();
+                frictionAction = null;
+            }
+        });
+
+        document.getElementById('closeFrictionBtn').addEventListener('click', () => {
+             frictionModal.style.display = 'none';
+             frictionAction = null;
+        });
+
         // Revoke all
         document.getElementById('revokeAllBtn').addEventListener('click', async () => {
-            if (!confirm('Révoquer TOUS les accès ? Cette action est irréversible.')) return;
             const list = await getAccessList();
-            await Promise.all(list.map(p => removeAccessPerson(p.id)));
+            if (list.length === 0) {
+                showToast('Aucun accès à révoquer.');
+                return;
+            }
 
-            // Log dans l'historique
-            try {
-                await addHistoryEntry({
-                    type: 'access_revoke_all',
-                    details: { count: list.length }
-                });
-            } catch (e) { console.warn('History log error:', e); }
+            window.requestFrictionVerification(async (keepLast, lastContact) => {
+                let revokedCount = 0;
+                let keptCount = 0;
 
-            showToast('Tous les accès ont été révoqués.');
-            renderAccessList(listEl);
+                for (const p of list) {
+                    if (keepLast && lastContact && p.id === lastContact.id) {
+                        keptCount++;
+                        continue;
+                    }
+                    await removeAccessPerson(p.id);
+                    revokedCount++;
+                }
+
+                try {
+                    await addHistoryEntry({
+                        type: 'access_revoke_all',
+                        details: { count: revokedCount, kept: keptCount }
+                    });
+                } catch (e) { console.warn('History log error:', e); }
+
+                if (keptCount > 0) {
+                    showToast(`${revokedCount} accès révoqué(s). ${lastContact.name} conservé.`);
+                } else {
+                    showToast('Tous les accès ont été révoqués.');
+                }
+                renderAccessList(listEl);
+            }, "Révoquer TOUS les accès ?", "Révoquer", list);
         });
     </script>
 </body>

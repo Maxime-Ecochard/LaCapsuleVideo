@@ -6,25 +6,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --green-dark: #2d7a4f;
-  --green-mid: #4caf7d;
-  --green-light: #8ecfac;
-  --green-pale: #e8f5ee;
-  --green-mist: #f0f7f4;
+  --blue-dark: #1e4a7a;
+  --blue-mid: #3498db;
+  --blue-light: #64b5f6;
+  --blue-pale: #e3f2fd;
+  --blue-mist: #f5f9fc;
   --white: #ffffff;
   --gray-100: #f8fafb;
   --gray-200: #eef1f3;
   --gray-400: #a0aab4;
   --gray-600: #6b7685;
   --gray-800: #2c3540;
-  --primary-color: #2d7a4f;
-  --secondary-color: #e8f5ee;
+  --primary-color: var(--blue-dark);
+  --secondary-color: var(--blue-pale);
   --text-color: #2c3540;
-  --accent: #5cb87a;
+  --accent: var(--blue-mid);
   --danger: #e57373;
-  --shadow-sm: 0 2px 8px rgba(45, 122, 79, 0.08);
-  --shadow-md: 0 4px 20px rgba(45, 122, 79, 0.14);
-  --shadow-lg: 0 8px 40px rgba(45, 122, 79, 0.18);
+  --shadow-sm: 0 2px 8px rgba(30, 74, 122, 0.08);
+  --shadow-md: 0 4px 20px rgba(30, 74, 122, 0.14);
+  --shadow-lg: 0 8px 40px rgba(30, 74, 122, 0.18);
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 24px;
@@ -46,7 +46,7 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: 16px;
   color: var(--gray-800);
-  background: var(--green-mist);
+  background: var(--blue-mist);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -74,7 +74,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid var(--green-pale);
+  border-bottom: 1px solid var(--blue-pale);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -95,7 +95,7 @@ body {
 .app-header h1 {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--green-dark);
+  color: var(--blue-dark);
   line-height: 1.2;
 }
 
@@ -110,21 +110,21 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--green-dark);
+  color: var(--blue-dark);
   padding: 6px;
   border-radius: 50%;
   transition: var(--transition);
 }
 
 .header-back:hover {
-  background: var(--green-pale);
+  background: var(--blue-pale);
 }
 
 /* ── Bottom Nav ── */
 .bottom-nav {
   display: flex;
   background: var(--white);
-  border-top: 1px solid var(--green-pale);
+  border-top: 1px solid var(--blue-pale);
   padding: 8px 0 12px;
 }
 
@@ -152,11 +152,11 @@ body {
 }
 
 .nav-item.active {
-  color: var(--green-dark);
+  color: var(--blue-dark);
 }
 
 .nav-item:hover {
-  color: var(--green-mid);
+  color: var(--blue-mid);
 }
 
 /* ── Cards ── */
@@ -165,13 +165,13 @@ body {
   border-radius: var(--radius-md);
   padding: 20px;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--green-pale);
+  border: 1px solid var(--blue-pale);
   margin-bottom: 16px;
 }
 
 .card-muted {
-  background: var(--green-mist);
-  border: 1px solid var(--green-pale);
+  background: var(--blue-mist);
+  border: 1px solid var(--blue-pale);
   border-radius: var(--radius-md);
   padding: 20px;
   margin-bottom: 16px;
@@ -196,7 +196,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
   color: var(--white);
   box-shadow: 0 4px 16px rgba(45, 122, 79, 0.35);
 }
@@ -211,13 +211,13 @@ body {
 }
 
 .btn-secondary {
-  background: var(--green-pale);
-  color: var(--green-dark);
-  border: 1.5px solid var(--green-light);
+  background: var(--blue-pale);
+  color: var(--blue-dark);
+  border: 1.5px solid var(--blue-light);
 }
 
 .btn-secondary:hover {
-  background: #d4edde;
+  background: #d1e9f9;
 }
 
 .btn-danger {
@@ -274,7 +274,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--green-mid);
+  border-color: var(--blue-mid);
   box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.12);
 }
 
@@ -293,15 +293,15 @@ textarea:focus {
   font-weight: 700;
   border: 2px solid var(--gray-200);
   border-radius: var(--radius-sm);
-  color: var(--green-dark);
-  caret-color: var(--green-mid);
+  color: var(--blue-dark);
+  caret-color: var(--blue-mid);
   transition: var(--transition);
   padding: 0;
   -webkit-text-security: disc;
 }
 
 .pin-digit:focus {
-  border-color: var(--green-mid);
+  border-color: var(--blue-mid);
   box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.15);
 }
 
@@ -313,7 +313,7 @@ textarea:focus {
   text-align: center;
   padding: 40px 24px;
   min-height: 100vh;
-  background: linear-gradient(170deg, var(--green-mist) 0%, var(--white) 60%);
+  background: linear-gradient(170deg, var(--blue-mist) 0%, var(--white) 60%);
 }
 
 .login-logo {
@@ -339,7 +339,7 @@ textarea:focus {
 .login-page h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--green-dark);
+  color: var(--blue-dark);
   margin-bottom: 8px;
   animation: fadeInUp 0.6s 0.2s ease-out both;
 }
@@ -353,8 +353,8 @@ textarea:focus {
 }
 
 .bienveillance-banner {
-  background: linear-gradient(135deg, #e8f5ee, #d4edde);
-  border: 1px solid var(--green-light);
+  background: linear-gradient(135deg, var(--blue-pale), #d1e9f9);
+  border: 1px solid var(--blue-light);
   border-radius: var(--radius-md);
   padding: 18px 20px;
   margin-bottom: 32px;
@@ -368,7 +368,7 @@ textarea:focus {
 
 .bienveillance-banner p {
   font-size: 0.88rem;
-  color: var(--green-dark);
+  color: var(--blue-dark);
   line-height: 1.6;
   font-style: italic;
 }
@@ -392,7 +392,7 @@ textarea:focus {
 
 /* ── Dashboard ── */
 .dashboard-hero {
-  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
   border-radius: var(--radius-lg);
   padding: 32px 24px;
   text-align: center;
@@ -439,7 +439,7 @@ textarea:focus {
 
 .record-btn-hero {
   background: var(--white);
-  color: var(--green-dark);
+  color: var(--blue-dark);
   font-size: 1.05rem;
   padding: 16px 32px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -483,9 +483,9 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   height: 200px;
-  background: var(--green-mist);
+  background: var(--blue-mist);
   border-radius: var(--radius-md);
-  border: 2px dashed var(--green-light);
+  border: 2px dashed var(--blue-light);
   color: var(--gray-400);
   gap: 10px;
 }
@@ -508,8 +508,8 @@ textarea:focus {
 }
 
 .meta-chip {
-  background: var(--green-pale);
-  color: var(--green-dark);
+  background: var(--blue-pale);
+  color: var(--blue-dark);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 12px;
@@ -601,11 +601,11 @@ textarea:focus {
 }
 
 .phase-dot.done {
-  background: var(--green-dark);
+  background: var(--blue-dark);
 }
 
 .phase-dot.active {
-  background: var(--green-mid);
+  background: var(--blue-mid);
 }
 
 /* Timer */
@@ -659,7 +659,7 @@ textarea:focus {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  border: 4px solid var(--green-dark);
+  border: 4px solid var(--blue-dark);
   background: var(--white);
   cursor: pointer;
   display: flex;
@@ -695,9 +695,9 @@ textarea:focus {
 }
 
 .prompts-panel {
-  background: var(--green-mist);
+  background: var(--blue-mist);
   padding: 16px 20px;
-  border-top: 1px solid var(--green-pale);
+  border-top: 1px solid var(--blue-pale);
 }
 
 .prompts-panel h3 {
@@ -727,13 +727,13 @@ textarea:focus {
 
 .prompt-list li.active {
   background: var(--white);
-  color: var(--green-dark);
+  color: var(--blue-dark);
   font-weight: 600;
   box-shadow: var(--shadow-sm);
 }
 
 .prompt-list li.done {
-  color: var(--green-light);
+  color: var(--blue-light);
   text-decoration: line-through;
 }
 
@@ -779,7 +779,7 @@ textarea:focus {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-dark));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -846,7 +846,7 @@ textarea:focus {
 
 .divider {
   height: 1px;
-  background: var(--green-pale);
+  background: var(--blue-pale);
   margin: 16px 0;
 }
 
@@ -873,12 +873,12 @@ textarea:focus {
 }
 
 .info-box {
-  background: linear-gradient(135deg, #e8f5ee, #d4edde);
-  border: 1px solid var(--green-light);
+  background: linear-gradient(135deg, #e3f2fd, #d1e9f9);
+  border: 1px solid var(--blue-light);
   border-radius: var(--radius-sm);
   padding: 14px 16px;
   font-size: 0.82rem;
-  color: var(--green-dark);
+  color: var(--blue-dark);
   line-height: 1.5;
   margin-bottom: 16px;
 }
@@ -901,8 +901,8 @@ textarea:focus {
   padding: 13px 28px;
   border-radius: var(--radius-xl);
   background: transparent;
-  border: 2px dashed var(--green-mid);
-  color: var(--green-dark);
+  border: 2px dashed var(--blue-mid);
+  color: var(--blue-dark);
   font-family: inherit;
   font-size: 0.92rem;
   font-weight: 600;
@@ -912,7 +912,7 @@ textarea:focus {
 }
 
 .btn-install:hover {
-  background: var(--green-pale);
+  background: var(--blue-pale);
   border-style: solid;
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
@@ -930,4 +930,30 @@ textarea:focus {
   line-height: 1.5;
   max-width: 280px;
   animation: fadeInUp 0.6s 0.9s ease-out both;
+}
+
+/* ── Modals (Shared) ── */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--blue-dark);
+  margin-bottom: 8px;
 }

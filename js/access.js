@@ -2,7 +2,7 @@
  * access.js — Gestion des droits d'accès à la capsule
  */
 
-import { getAccessList, addAccessPerson, removeAccessPerson, updateAccessPerson, showToast, addHistoryEntry } from './app.js';
+import { getAccessList, addAccessPerson, removeAccessPerson, updateAccessPerson, showToast, addHistoryEntry, getUserProfile } from './app.js';
 
 const ROLES = {
     soignant: { label: 'Soignant(e)', badge: 'badge-soignant' },
@@ -43,6 +43,11 @@ export async function renderAccessList(containerEl) {
         <span class="access-badge ${role.badge} mt-8">${role.label}</span>
       </div>
       <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn btn-secondary btn-sm notify-btn" title="Prévenir" style="background:var(--blue-pale); color:var(--blue-dark);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+          </svg>
+        </button>
         <button class="btn btn-secondary btn-sm edit-btn" title="Modifier">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
             <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 1.586L10.5 1.793 1.415 10.879l-1.202 3.006 3.006-1.201L12.793 4.086z"/>
@@ -74,6 +79,10 @@ export async function renderAccessList(containerEl) {
 
         el.querySelector('.edit-btn').addEventListener('click', () => {
             editAccessPerson(person);
+        });
+
+        el.querySelector('.notify-btn').addEventListener('click', () => {
+            handleNotify(person);
         });
 
         containerEl.appendChild(el);
@@ -145,4 +154,52 @@ export function cancelEdit(form) {
 
 function escHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+export async function handleNotify(person) {
+    const profile = await getUserProfile();
+    const senderName = profile ? `${profile.firstName} ${profile.lastName}`.trim() : 'Un contact';
+    const message = `${senderName} vient de vous donner accès à sa **Capsule Vidéo pour le Rétablissement**.
+
+Merci de la visionner avec bienveillance, dans le respect de la confidentialité et de l’usage thérapeutique de ce support.
+
+Cette capsule a été réalisée en période de stabilité afin de transmettre des repères, des souhaits et des ressources en cas de difficulté ou de situation de crise.
+
+En cas d’urgence ou de situation préoccupante, vous êtes autorisé(e) à la montrer au personnel soignant, ainsi qu’à ${senderName} s'il/elle n’y a plus accès, afin de faciliter la compréhension de ses besoins et l’accompagnement.
+
+Voici le lien de la capsule vidéo : {futur lien de partage pour le jour où les capsules seront également stockées sur un serveur}`;
+    
+    const canEmail = !!person.email;
+    const canSms = !!person.phone;
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Capsule Vidéo',
+                text: message
+            });
+            showToast('Message prêt à être envoyé.');
+            return;
+        }
+    } catch (e) {
+        if (e.name !== 'AbortError') {
+            console.warn('Share API error:', e);
+        } else {
+            return; // Annulé par l'utilisateur
+        }
+    }
+
+    if (canSms) {
+        window.location.href = `sms:${person.phone}?body=${encodeURIComponent(message)}`;
+    } else if (canEmail) {
+        window.location.href = `mailto:${person.email}?subject=Capsule%20Vid\u00E9o%20-%20Acc\u00E8s%20autoris\u00E9&body=${encodeURIComponent(message)}`;
+    } else if (person.contact) {
+        if (person.contact.includes('@')) {
+            window.location.href = `mailto:${person.contact}?subject=Capsule%20Vid\u00E9o%20-%20Acc\u00E8s%20autoris\u00E9&body=${encodeURIComponent(message)}`;
+        } else {
+            window.location.href = `sms:${person.contact}?body=${encodeURIComponent(message)}`;
+        }
+    } else {
+        showToast("Aucun contact renseigné pour cette personne.");
+    }
 }

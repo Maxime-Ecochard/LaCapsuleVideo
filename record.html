@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#2d7a4f" />
+    <meta name="theme-color" content="#1e4a7a" />
     <title>Enregistrement — Capsule Vidéo</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
@@ -43,8 +43,9 @@
                             d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5z" />
                     </svg>
                     <span>Appuyez sur ● pour commencer</span>
-                    
-                    <a href="tutoriel.html" class="btn btn-secondary btn-sm" style="margin-top:20px; font-weight:500; background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.4); backdrop-filter:blur(4px);">
+
+                    <a href="tutoriel.html" class="btn btn-secondary btn-sm"
+                        style="margin-top:20px; font-weight:500; background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.4); backdrop-filter:blur(4px);">
                         📖 Voir le tutoriel (Étapes conseillées)
                     </a>
                 </div>
@@ -59,7 +60,8 @@
                 <div class="prompt-overlay" id="importOverlay" style="display:none; text-align:center; padding: 20px;">
                     <h3 style="margin-bottom:12px; font-size:1.2rem;">Vidéo sélectionnée</h3>
                     <p style="margin-bottom:12px; font-size:0.9rem;">Date d'enregistrement de la capsule :</p>
-                    <input type="date" id="importDate" class="input-field" style="margin-bottom: 20px; width:100%; max-width:200px; display:inline-block;" />
+                    <input type="date" id="importDate" class="input-field"
+                        style="margin-bottom: 20px; width:100%; max-width:200px; display:inline-block;" />
                     <div style="display:flex; justify-content:center; gap:12px;">
                         <button class="btn btn-secondary" id="cancelImportOverlayBtn">Annuler</button>
                         <button class="btn btn-primary" id="confirmImportOverlayBtn">Sauvegarder</button>
@@ -86,16 +88,21 @@
             <div class="record-controls">
                 <button class="btn btn-secondary btn-sm" id="cancelBtn" style="display:none;">Annuler</button>
 
-                <button class="btn btn-secondary btn-sm" id="pauseBtn" style="display:none;" title="Mettre en pause">⏸ Pause</button>
+                <button class="btn btn-secondary btn-sm" id="pauseBtn" style="display:none;" title="Mettre en pause">⏸
+                    Pause</button>
 
                 <button class="rec-btn-main" id="mainRecBtn" title="Enregistrer">
                     <div class="inner-circle"></div>
                 </button>
 
-                <label class="btn btn-secondary btn-sm" id="importBtn" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                        <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                <label class="btn btn-secondary btn-sm" id="importBtn"
+                    style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                        <path fill-rule="evenodd"
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
                     </svg>
                     Importer
                     <input type="file" id="importVideoInput" accept="video/*" style="display:none;" />
@@ -115,16 +122,16 @@
             <div class="prompts-panel">
                 <h3>Guide — phases de l'enregistrement</h3>
                 <ul class="prompt-list" id="promptList">
-                    <li id="li0">🪪 Identification</li>
-                    <li id="li1">🧠 Pathologie & Signes d'alerte</li>
+                    <li id="li0">🪪 Identification, Date, Pathologie et Traitement</li>
+                    <li id="li1">🧠 Signes d'alertes, Repères, Souhaits, Ressources en cas de crise</li>
                     <li id="li2">📋 Mes Directives de Soins</li>
-                    <li id="li3">💚 Mon Message d'Espoir</li>
+                    <li id="li3">💙 Mon Message d'Espoir</li>
                 </ul>
             </div>
 
             <!-- Bienveillance reminder -->
             <div class="info-box" style="margin-top:16px;">
-                💚 Prenez le temps qu'il vous faut. Faites une pause si besoin. Vous pouvez réenregistrer à tout moment.
+                💙 Prenez le temps qu'il vous faut. Faites une pause si besoin. Vous pouvez réenregistrer à tout moment.
             </div>
 
         </main>

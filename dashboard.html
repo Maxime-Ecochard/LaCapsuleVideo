@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#2d7a4f" />
+    <meta name="theme-color" content="#1e4a7a" />
     <title>Mon Tableau de Bord — Capsule Vidéo</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
@@ -36,14 +36,14 @@
 
         .tab-btn.active {
             background: white;
-            color: var(--green-dark);
+            color: var(--blue-dark);
             font-weight: 700;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .meta-chip {
-            background: var(--green-pale);
-            color: var(--green-dark);
+            background: var(--blue-pale);
+            color: var(--blue-dark);
             font-size: 0.75rem;
             font-weight: 600;
             padding: 4px 12px;
@@ -83,8 +83,15 @@
             <!-- Hero / Record CTA -->
             <div class="dashboard-hero">
                 <p class="dashboard-hero h2" style="font-size:0.95rem;opacity:0.8;margin-bottom:4px;">Bonjour,</p>
-                <p class="hero-name" id="heroName">…</p>
-                <button class="record-btn-hero" id="recordBtn">
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                    <p class="hero-name" id="heroName" style="margin:0;">…</p>
+                    <button class="btn btn-secondary btn-sm" id="editProfileBtn" style="padding: 4px 8px; background: rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.3);" title="Modifier mon profil">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 1.586L10.5 1.793 1.415 10.879l-1.202 3.006 3.006-1.201L12.793 4.086z"/>
+                        </svg>
+                    </button>
+                </div>
+                <button class="record-btn-hero" id="recordBtn" style="margin-top:16px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         viewBox="0 0 16 16">
                         <path
@@ -104,6 +111,10 @@
             <!-- Current Capsules -->
             <p class="section-title">Mes Capsules</p>
             <div class="card" id="capsuleCard">
+                <div id="trashBanner" style="display:none; background:#fff3e0; border:1px solid #ffcc80; padding:12px; border-radius:8px; margin-bottom:16px; font-size:0.85rem; align-items:center; justify-content:space-between;">
+                    <div style="color:#e65100">⚠️ Capsule en corbeille (<span id="trashTimer">48</span>h)</div>
+                    <button class="btn btn-sm btn-secondary" id="restoreBtn" style="padding:4px 8px; font-size:0.75rem; background:white; color:#e65100; border-color:#ffb74d;">Restaurer</button>
+                </div>
                 <div id="tabsHeader" class="tabs-header" style="display:none;">
                     <button class="tab-btn active" data-tab="0">Ma capsule actuelle</button>
                     <button class="tab-btn" data-tab="1" id="prevTabBtn" style="display:none;">Capsule précédente</button>
@@ -145,8 +156,8 @@
                 Les <strong>Directives Anticipées en Psychiatrie</strong> (DAP) vous permettent d'exprimer vos souhaits
                 concernant vos soins en cas de crise, quand vous n'êtes plus en mesure de le faire vous-même.
                 <div class="divider"></div>
-                <span style="color:var(--green-dark);font-weight:600;">Durée recommandée&nbsp;:</span> 2 à 5 minutes.<br>
-                <span style="color:var(--green-dark);font-weight:600;">Phases&nbsp;:</span> Identification · Pathologie ·
+                <span style="color:var(--blue-dark);font-weight:600;">Durée recommandée&nbsp;:</span> 2 à 5 minutes.<br>
+                <span style="color:var(--blue-dark);font-weight:600;">Phases&nbsp;:</span> Identification · Pathologie ·
                 Directives · Message d'espoir.
 
                 <div class="divider"></div>
@@ -171,6 +182,70 @@
                 </a>
             </div>
         </main>
+
+        <!-- Profil Modal -->
+        <div class="modal-overlay" id="profileModal">
+            <div class="modal-content">
+                <h2 class="modal-title">Faisons connaissance 👋</h2>
+                <p style="font-size:0.85rem; color:var(--gray-500); margin-bottom: 20px;">
+                    Ces informations nous permettront de signer de votre part les messages envoyés à vos contacts.
+                </p>
+                <form id="profileForm">
+                    <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label for="prof-firstname">Prénom</label>
+                            <input type="text" id="prof-firstname" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-lastname">Nom de famille</label>
+                            <input type="text" id="prof-lastname" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prof-email">Adresse Email</label>
+                        <input type="email" id="prof-email" placeholder="mail@exemple.fr" />
+                    </div>
+                    <div class="form-group">
+                        <label for="prof-phone">Téléphone</label>
+                        <input type="tel" id="prof-phone" placeholder="06.." />
+                    </div>
+                    <div style="display:flex; gap:12px; margin-top:20px;">
+                        <button type="button" class="btn btn-secondary btn-full" id="closeProfileBtn" style="background:var(--gray-200); color:var(--gray-600);">Fermer</button>
+                        <button type="submit" class="btn btn-primary btn-full">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Friction Modal -->
+        <div class="modal-overlay" id="frictionModal">
+            <div class="modal-content">
+                <h2 class="modal-title" style="color:var(--danger)">Vérification de sécurité ⚠️</h2>
+                <p style="font-size:0.85rem; color:var(--gray-600); margin-bottom: 20px;" id="frictionMessage">
+                    Pour éviter toute suppression accidentelle, veuillez confirmer votre identité.
+                </p>
+                <form id="frictionForm">
+                    <div class="form-group">
+                        <label for="frict-email">Re-saisissez votre Email (celui du profil)</label>
+                        <input type="email" id="frict-email" placeholder="Email exact" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="frict-pin">Code PIN (4 chiffres)</label>
+                        <input type="tel" id="frict-pin" placeholder="••••" maxlength="4" required style="-webkit-text-security: disc; letter-spacing: 0.2em; font-size:1.2rem; text-align:center;" />
+                    </div>
+                    <div id="frictionCheckGroup" style="display:none; margin-bottom: 12px; background:var(--blue-pale); padding:10px; border-radius:8px;">
+                        <label style="display:flex; align-items:flex-start; gap:8px; font-weight:normal; font-size:0.8rem; color:var(--blue-dark); cursor:pointer; margin:0;">
+                            <input type="checkbox" id="frict-keepLastContact" checked style="width:18px; height:18px; margin-top:2px;" />
+                            <span style="flex:1;">Conserver le dernier contact ajouté (<span id="lastContactName"></span>) en ultime secours.</span>
+                        </label>
+                    </div>
+                    <div style="display:flex; gap:12px; margin-top:20px;">
+                        <button type="button" class="btn btn-secondary btn-full" id="closeFrictionBtn" style="background:var(--gray-200); color:var(--gray-600); border:none;">Annuler</button>
+                        <button type="submit" class="btn btn-danger btn-full" id="submitFrictionBtn">Confirmer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Bottom Nav -->
         <nav class="bottom-nav">
@@ -210,7 +285,7 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { getState, requireAuth, clearState, getCapsules, deleteCapsule, showToast, addHistoryEntry } from './js/app.js';
+        import { getState, requireAuth, clearState, getCapsules, showToast, addHistoryEntry, getUserProfile, saveUserProfile, getTrashedCapsules, softDeleteCapsule, restoreCapsule } from './js/app.js';
         import { decryptData } from './js/crypto.js';
 
         if (!requireAuth()) throw new Error('Not authenticated');
@@ -228,8 +303,73 @@
         const player = document.getElementById('capsulePlayer');
         const meta = document.getElementById('capsuleMeta');
 
+        // Profile logic
+        let userProfile = null;
+        const profileModal = document.getElementById('profileModal');
+        const profileForm = document.getElementById('profileForm');
+
+        async function loadProfile() {
+            userProfile = await getUserProfile(state.name);
+            if (!userProfile) {
+                // First connection
+                document.getElementById('prof-firstname').value = state.name;
+                profileModal.style.display = 'flex';
+            }
+        }
+        loadProfile();
+
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            if (userProfile) {
+                document.getElementById('prof-firstname').value = userProfile.firstName || state.name;
+                document.getElementById('prof-lastname').value = userProfile.lastName || '';
+                document.getElementById('prof-email').value = userProfile.email || '';
+                document.getElementById('prof-phone').value = userProfile.phone || '';
+            } else {
+                document.getElementById('prof-firstname').value = state.name;
+            }
+            profileModal.style.display = 'flex';
+        });
+
+        profileForm.addEventListener('submit', async e => {
+            e.preventDefault();
+            const firstName = document.getElementById('prof-firstname').value.trim();
+            const lastName = document.getElementById('prof-lastname').value.trim();
+            const email = document.getElementById('prof-email').value.trim();
+            const phone = document.getElementById('prof-phone').value.trim();
+
+            await saveUserProfile({ firstName, lastName, email, phone });
+            userProfile = await getUserProfile(state.name);
+            profileModal.style.display = 'none';
+            showToast('Profil enregistré ✔️');
+        });
+
+        document.getElementById('closeProfileBtn').addEventListener('click', () => {
+            if (!userProfile) {
+                showToast('Veuillez renseigner vos informations.');
+                return;
+            }
+            profileModal.style.display = 'none';
+        });
+
         // Load existing capsules
         async function loadCapsules() {
+            // Afficher le bandeau si des capsules sont en corbeille
+            const trashed = await getTrashedCapsules(state.name);
+            const trashBanner = document.getElementById('trashBanner');
+            if (trashed.length > 0) {
+                const tc = trashed[0];
+                const diffHours = Math.max(0, 48 - Math.floor((new Date() - new Date(tc.deletedAt)) / (1000 * 60 * 60)));
+                document.getElementById('trashTimer').textContent = diffHours;
+                trashBanner.style.display = 'flex';
+                document.getElementById('restoreBtn').onclick = async () => {
+                    await restoreCapsule(tc.internalId);
+                    showToast('Capsule restaurée !');
+                    loadCapsules();
+                };
+            } else {
+                trashBanner.style.display = 'none';
+            }
+
             userCapsules = await getCapsules(state.name);
             
             if (userCapsules.length === 0) {
@@ -300,28 +440,73 @@
             window.location.href = 'record.html';
         });
 
+        // --- Friction Logic ---
+        let frictionAction = null; 
+        const frictionModal = document.getElementById('frictionModal');
+        const frictionForm = document.getElementById('frictionForm');
+
+        window.requestFrictionVerification = async function(onConfirmCallback, messageTitle, btnText) {
+            const profile = await getUserProfile(state.name);
+            if (!profile || !profile.email) {
+                showToast("Veuillez d'abord configurer un Email dans votre profil pour cette action de sécurité.");
+                document.getElementById('editProfileBtn').click();
+                return;
+            }
+
+            frictionAction = onConfirmCallback;
+            document.getElementById('frictionMessage').innerText = messageTitle || "Pour éviter toute suppression accidentelle, veuillez confirmer votre identité.";
+            document.getElementById('submitFrictionBtn').innerText = btnText || "Confirmer";
+            document.getElementById('frictionCheckGroup').style.display = 'none';
+            document.getElementById('frict-email').value = '';
+            document.getElementById('frict-pin').value = '';
+            frictionModal.style.display = 'flex';
+        };
+
+        frictionForm.addEventListener('submit', async e => {
+            e.preventDefault();
+            const emailInput = document.getElementById('frict-email').value.trim();
+            const pinInput = document.getElementById('frict-pin').value.trim();
+            
+            const profile = await getUserProfile(state.name);
+            
+            if (emailInput.toLowerCase() !== profile.email.toLowerCase()) {
+                showToast("L'adresse email ne correspond pas à celle de votre profil.");
+                return;
+            }
+            if (pinInput !== state.pin) {
+                showToast("Le code PIN est incorrect.");
+                return;
+            }
+            
+            frictionModal.style.display = 'none';
+            if (frictionAction) {
+                frictionAction();
+                frictionAction = null;
+            }
+        });
+
+        document.getElementById('closeFrictionBtn').addEventListener('click', () => {
+             frictionModal.style.display = 'none';
+             frictionAction = null;
+        });
+
         document.getElementById('deleteBtn')?.addEventListener('click', async () => {
             const currentRecord = userCapsules[currentIdx];
             if (!currentRecord) return;
-
             const label = currentIdx === 0 ? 'votre capsule ACTUELLE' : 'votre capsule PRÉCÉDENTE';
-            if (confirm(`Supprimer définitivement ${label} ? Cette action est irréversible.`)) {
-                await deleteCapsule(currentRecord.internalId);
-
-                // Log dans l'historique
+            
+            window.requestFrictionVerification(async () => {
+                await softDeleteCapsule(currentRecord.internalId);
                 try {
                     await addHistoryEntry({
                         type: 'delete',
-                        details: { 
-                            version: currentIdx === 0 ? 'actuelle' : 'précédente',
-                            capsuleNumber: currentRecord.capsuleNumber 
-                        }
+                        details: { version: currentIdx === 0 ? 'actuelle' : 'précédente', capsuleNumber: currentRecord.capsuleNumber }
                     });
                 } catch (e) { console.warn('History log error:', e); }
 
-                showToast('Capsule supprimée.');
+                showToast('Capsule envoyée à la corbeille pour 48h.');
                 setTimeout(() => location.reload(), 1500);
-            }
+            }, `Supprimer ${label} ?`, "Corbeille");
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {

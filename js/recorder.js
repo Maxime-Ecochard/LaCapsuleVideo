@@ -11,21 +11,23 @@ import { saveCapsule, getState, showToast, addHistoryEntry, getNextCapsuleNumber
 const PHASES = [
     {
         id: 'identification',
-        label: '🪪 Identification',
+        label: '🪪 Identification, Date, Pathologie et Traitement',
         prompts: [
-            'Bonjour, je me présente…',
-            'Mon nom est {name}, nous sommes le {date}.',
+            'Bonjour, mon nom est {name}, nous sommes le {date}.',
             'J\'enregistre mes directives anticipées en psychiatrie.',
+            'Ma pathologie principale est…',
+            'Mon traitement actuel est…',
         ],
-        duration: 30  // seconds
+        duration: 40  // seconds
     },
     {
         id: 'pathologie',
-        label: '🧠 Pathologie & Signes d\'alerte',
+        label: '🧠 Signes d\'alertes, Repères, Souhaits, Ressources',
         prompts: [
-            'Ma pathologie principale est…',
-            'Quand je vais moins bien, les signes sont…',
-            'Ce qui m\'aide à reconnaître une crise est…',
+            'Quand je vais moins bien, mes signes d\'alerte sont…',
+            'Ce qui m\'aide à garder l\'équilibre et mes repères sont…',
+            'En cas de difficulté ou de crise, mes souhaits sont…',
+            'Mes ressources et personnes ressources sont…',
         ],
         duration: 60
     },
@@ -42,7 +44,7 @@ const PHASES = [
     },
     {
         id: 'espoir',
-        label: '💚 Mon Message d\'Espoir',
+        label: '💙 Mon Message d\'Espoir',
         prompts: [
             'À toi, moi du futur, je veux te dire…',
             'Tu as traversé des moments difficiles avant, et tu t\'en es sorti(e).',
