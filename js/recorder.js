@@ -11,46 +11,54 @@ import { saveCapsule, getState, showToast, addHistoryEntry, getNextCapsuleNumber
 const PHASES = [
     {
         id: 'identification',
-        label: '🪪 Identification, Date, Pathologie et Traitement',
+        label: '🪪 Identification, Date, Pathologie & Traitement',
+        /*
         prompts: [
             'Bonjour, mon nom est {name}, nous sommes le {date}.',
             'J\'enregistre mes directives anticipées en psychiatrie.',
             'Ma pathologie principale est…',
             'Mon traitement actuel est…',
         ],
+        */
         duration: 40  // seconds
     },
     {
         id: 'pathologie',
         label: '🧠 Signes d\'alertes, Repères, Souhaits, Ressources',
+        /*
         prompts: [
             'Quand je vais moins bien, mes signes d\'alerte sont…',
             'Ce qui m\'aide à garder l\'équilibre et mes repères sont…',
             'En cas de difficulté ou de crise, mes souhaits sont…',
             'Mes ressources et personnes ressources sont…',
         ],
+        */
         duration: 60
     },
     {
         id: 'directives',
         label: '📋 Mes Directives de Soins',
+        /*
         prompts: [
             'En cas de crise, je souhaite que l\'on…',
             'Je refuse expressément…',
             'Mon traitement habituel est…',
             'Ma personne de confiance est…',
         ],
+        */
         duration: 90
     },
     {
         id: 'espoir',
         label: '💙 Mon Message d\'Espoir',
+        /*
         prompts: [
             'À toi, moi du futur, je veux te dire…',
             'Tu as traversé des moments difficiles avant, et tu t\'en es sorti(e).',
             'Voici ce qui m\'a aidé à tenir : …',
             'Je crois en toi. Tu es plus fort(e) que tu ne le crois.',
         ],
+        */
         duration: 45
     }
 ];
@@ -139,15 +147,15 @@ export class GuidedRecorder {
             this.mediaRecorder.onstop = async () => {
                 const mimeType = getSupportedMimeType();
                 const blob = new Blob(this.chunks, { type: mimeType });
-                
+
                 // Trigger auto download of the unencrypted file locally
                 const state = getState();
                 const userName = state.name || 'Capsule';
                 const now = new Date();
-                const dateStr = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getFullYear()}`;
+                const dateStr = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getFullYear()}`;
                 const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
                 const filename = `DAP_${userName}_${dateStr}.${ext}`;
-                
+
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
