@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -9,41 +10,180 @@
     <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
     <link rel="stylesheet" href="css/style.css" />
     <style>
-        .tuto-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 12px; }
-        .tuto-tab { flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; color: var(--gray-500); cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
-        .tuto-tab.active { background: white; color: var(--primary-color); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .tuto-content { display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .tuto-content.active { display: block; animation: fadeIn 0.4s ease-out; }
-        
-        .tuto-section { margin-bottom: 24px; }
-        .tuto-section h3 { color: var(--primary-color); margin-bottom: 10px; font-size: 1.1rem; border-bottom: 2px solid #eef2fa; padding-bottom: 6px; }
-        .tuto-section h4 { color: var(--text-color); margin-bottom: 6px; font-size: 0.95rem; margin-top: 12px; }
-        .tuto-section p, .tuto-section ul { margin-bottom: 12px; line-height: 1.6; color: var(--gray-600); font-size: 0.9rem; }
-        .tuto-section ul { padding-left: 20px; }
-        .tuto-section li { margin-bottom: 6px; }
+        .tuto-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 4px;
+            border-radius: 12px;
+        }
 
-        .media-player { text-align: center; padding: 20px 0; }
-        .avatar-container { width: 140px; height: 140px; margin: 0 auto 20px auto; border-radius: 50%; overflow: hidden; border: 4px solid white; box-shadow: 0 8px 16px rgba(45,122,79,0.2); position: relative; }
-        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        .speaking-ring { position: absolute; top:0; left:0; right:0; bottom:0; border-radius: 50%; border: 4px solid var(--primary-color); opacity: 0; pointer-events: none; }
-        
-        @keyframes pulseRing { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.15); opacity: 0; } }
-        .is-speaking .speaking-ring { animation: pulseRing 1.5s infinite ease-out; }
-        
-        .audio-controls { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .btn-play { background: var(--primary-color); color: white; border: none; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(45,122,79,0.3); transition: transform 0.2s; }
-        .btn-play:active { transform: scale(0.95); }
-        .btn-play svg { width: 24px; height: 24px; }
-        
-        .media-status { font-size: 0.9rem; color: var(--gray-500); margin-top: 15px; font-weight: 500; height: 20px; }
+        .tuto-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .tuto-tab.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .tuto-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .tuto-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tuto-section {
+            margin-bottom: 24px;
+        }
+
+        .tuto-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #eef2fa;
+            padding-bottom: 6px;
+        }
+
+        .tuto-section h4 {
+            color: var(--text-color);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            margin-top: 12px;
+        }
+
+        .tuto-section p,
+        .tuto-section ul {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        .tuto-section ul {
+            padding-left: 20px;
+        }
+
+        .tuto-section li {
+            margin-bottom: 6px;
+        }
+
+        .media-player {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .avatar-container {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 8px 16px rgba(45, 122, 79, 0.2);
+            position: relative;
+        }
+
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .speaking-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            border: 4px solid var(--primary-color);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.15);
+                opacity: 0;
+            }
+        }
+
+        .is-speaking .speaking-ring {
+            animation: pulseRing 1.5s infinite ease-out;
+        }
+
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-play {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(45, 122, 79, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .btn-play:active {
+            transform: scale(0.95);
+        }
+
+        .btn-play svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .media-status {
+            font-size: 0.9rem;
+            color: var(--gray-500);
+            margin-top: 15px;
+            font-weight: 500;
+            height: 20px;
+        }
     </style>
 </head>
+
 <body>
     <div class="app-shell">
         <header class="app-header">
             <button class="header-back" id="backBtn" title="Retour">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                    <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
                 </svg>
             </button>
             <div>
@@ -54,7 +194,8 @@
 
         <main class="page">
             <p style="font-size:0.9rem; color:var(--gray-600); margin-bottom:20px; line-height:1.5;">
-                Découvrez comment réaliser votre Capsule Vidéo pour le Rétablissement. Choisissez le format qui vous convient le mieux.
+                Découvrez comment réaliser votre Capsule Vidéo pour le Rétablissement. Choisissez le format qui vous
+                convient le mieux.
             </p>
 
             <div class="tuto-tabs">
@@ -67,43 +208,56 @@
             <div class="tuto-content active" id="tab-ecrit">
                 <div class="tuto-section">
                     <h3>Qu'est-ce que la Capsule Vidéo ?</h3>
-                    <p>Un outil thérapeutique innovant visant à soutenir l'autodétermination, conçu par Émilie André. Elle prend la forme d'un enregistrement court (2 à 5 min), réalisé en période de stabilité émotionnelle.</p>
-                    <p><strong>Objectif&nbsp;:</strong> s'adresser directement à soi-même pour les jours difficiles, afin de se rappeler ses ressources et ses souhaits en cas de crise.</p>
+                    <p>Un outil thérapeutique innovant visant à soutenir l'autodétermination, conçu par Émilie André.
+                        Elle prend la forme d'un enregistrement court (2 à 5 min), réalisé en période de stabilité
+                        émotionnelle.</p>
+                    <p><strong>Objectif&nbsp;:</strong> s'adresser directement à soi-même pour les jours difficiles,
+                        afin de se rappeler ses ressources et ses souhaits en cas de crise.</p>
                 </div>
-                
+
                 <div class="tuto-section">
                     <h3>Étape 1 : Préparation</h3>
                     <ul>
                         <li><strong>Matériel&nbsp;:</strong> Smartphone (en mode avion), tablette ou ordinateur.</li>
                         <li><strong>Environnement&nbsp;:</strong> Un endroit tranquille et bien éclairé.</li>
-                        <li><strong>Aide&nbsp;:</strong> Vous pouvez la réaliser seul(e) ou avec l'accompagnement d'un pair-aidant/professionnel.</li>
+                        <li><strong>Aide&nbsp;:</strong> Vous pouvez la réaliser seul(e) ou avec l'accompagnement d'un
+                            pair-aidant/professionnel.</li>
                     </ul>
                 </div>
 
                 <div class="tuto-section">
                     <h3>Étape 2 : Structuration du message</h3>
                     <h4>1. L'ancrage</h4>
-                    <p>Mentionnez la date et identifiez-vous (ex: "Bonjour, je suis..."). Expliquez le but de la vidéo.</p>
+                    <p>Mentionnez la date et identifiez-vous (ex: "Bonjour, je suis..."). Expliquez le but de la vidéo.
+                    </p>
                     <h4>2. Vos ressources</h4>
-                    <p>Adressez-vous à vous-même pour vous rappeler vos forces et ancrer votre capacité de discernement.</p>
+                    <p>Adressez-vous à vous-même pour vous rappeler vos forces et ancrer votre capacité de discernement.
+                    </p>
                     <h4>3. Les Directives Anticipées (DAP)</h4>
-                    <p>Énoncez vos souhaits/refus en période de crise (soins, environnement, logement). Vous pouvez vous baser sur "Mon GPS".</p>
+                    <p>Énoncez vos souhaits/refus en période de crise (soins, entourage, logement, traitement(s),
+                        alternatives à l'hôspitalisation). Vous pouvez vous baser sur "Mon GPS".</p>
                     <h4>4. Le message d'espoir</h4>
-                    <p>Transmettez-vous un message d'espoir avec tendresse, force ou humour. Rappelez-vous que rien n'est permanent.</p>
+                    <p>Transmettez-vous un message d'espoir avec tendresse, force ou humour. Rappelez-vous que rien
+                        n'est permanent.</p>
                     <h4>5. L'écriture</h4>
                     <p>Rédigez un court script qui servira de feuille de route.</p>
                 </div>
 
                 <div class="tuto-section">
                     <h3>Étape 3 : L'enregistrement</h3>
-                    <p>Regardez la caméra, parlez simplement ("je"). C'est un message intime, parlez-vous avec bienveillance.<br>Le format vidéo transmet précieusement vos émotions et intonations.</p>
+                    <p>Regardez la caméra, parlez simplement ("je"). C'est un message intime, parlez-vous avec
+                        bienveillance.<br>Le format vidéo transmet précieusement vos émotions et intonations.</p>
                 </div>
-                
+
                 <div class="tuto-section">
                     <h3>Étape 4 : Conservation & Utilisation</h3>
-                    <p>Sauvegardez la vidéo précieusement (elle est chiffrée ici). Vous pouvez la partager avec une personne de confiance ou la joindre à votre dossier patient.</p>
-                    <p style="background:#fff3cd; padding:10px; border-radius:8px; margin-top:12px; color:#856404; font-size:0.85rem;">
-                        <strong>Peur de vous filmer&nbsp;?</strong> C'est normal. Cette vidéo est privée, elle n'est pas un exercice cinématographique. C'est votre parole authentique qui compte ! Vous restez maître de son contenu.
+                    <p>Sauvegardez la vidéo précieusement (elle est chiffrée ici). Vous pouvez la partager avec une
+                        personne de confiance ou la joindre à votre dossier patient.</p>
+                    <p
+                        style="background:#fff3cd; padding:10px; border-radius:8px; margin-top:12px; color:#856404; font-size:0.85rem;">
+                        <strong>Peur de vous filmer&nbsp;?</strong> C'est normal. Cette vidéo est privée, elle n'est pas
+                        un exercice cinématographique. C'est votre parole authentique qui compte ! Vous restez maître de
+                        son contenu.
                     </p>
                 </div>
             </div>
@@ -111,18 +265,25 @@
             <!-- TAB AUDIO -->
             <div class="tuto-content" id="tab-audio">
                 <div class="media-player">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="var(--primary-color)" viewBox="0 0 16 16" style="margin-bottom:15px; opacity:0.8;">
-                        <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.026 8a7.48 7.48 0 0 1-2.198 5.303l.708.707z"/>
-                        <path d="M10.121 12.596A6.48 6.48 0 0 0 12.026 8a6.48 6.48 0 0 0-1.905-4.596l-.707.707A5.48 5.48 0 0 1 11.026 8a5.48 5.48 0 0 1-1.612 3.889l.707.707z"/>
-                        <path d="M8.707 11.182A4.5 4.5 0 0 0 10.026 8a4.5 4.5 0 0 0-1.319-3.182L8 5.525A3.5 3.5 0 0 1 9.026 8 3.5 3.5 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="var(--primary-color)"
+                        viewBox="0 0 16 16" style="margin-bottom:15px; opacity:0.8;">
+                        <path
+                            d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.026 8a7.48 7.48 0 0 1-2.198 5.303l.708.707z" />
+                        <path
+                            d="M10.121 12.596A6.48 6.48 0 0 0 12.026 8a6.48 6.48 0 0 0-1.905-4.596l-.707.707A5.48 5.48 0 0 1 11.026 8a5.48 5.48 0 0 1-1.612 3.889l.707.707z" />
+                        <path
+                            d="M8.707 11.182A4.5 4.5 0 0 0 10.026 8a4.5 4.5 0 0 0-1.319-3.182L8 5.525A3.5 3.5 0 0 1 9.026 8 3.5 3.5 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z" />
                     </svg>
                     <h3 style="color:var(--text-color); margin-bottom: 8px;">Tutoriel Audio</h3>
-                    <p style="font-size:0.9rem; color:var(--gray-500); line-height:1.5;">Écoutez les explications pas à pas pour préparer et réaliser votre capsule.</p>
-                    
+                    <p style="font-size:0.9rem; color:var(--gray-500); line-height:1.5;">Écoutez les explications pas à
+                        pas pour préparer et réaliser votre capsule.</p>
+
                     <div class="audio-controls">
                         <button class="btn-play" id="audioPlayBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" id="audioIcon">
-                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 16 16" id="audioIcon">
+                                <path
+                                    d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
                             </svg>
                         </button>
                     </div>
@@ -131,14 +292,12 @@
             </div>
 
             <!-- TAB VIDEO (AVATAR) -->
-            <div class="tuto-content" id="tab-video" style="padding: 0; overflow: hidden; border-radius: 12px; background: transparent;">
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-                    <iframe 
-                        src="https://app.heygen.com/embeds/3dc5f636449247aea664c004863ad207" 
-                        title="Tutoriel vidéo" 
-                        frameborder="0" 
-                        allow="encrypted-media; fullscreen;" 
-                        allowfullscreen 
+            <div class="tuto-content" id="tab-video"
+                style="padding: 0; overflow: hidden; border-radius: 12px; background: transparent;">
+                <div
+                    style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <iframe src="https://app.heygen.com/embeds/3dc5f636449247aea664c004863ad207" title="Tutoriel vidéo"
+                        frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen
                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
                     </iframe>
                 </div>
@@ -156,7 +315,7 @@
         // Tabs Logic
         const tabs = document.querySelectorAll('.tuto-tab');
         const contents = document.querySelectorAll('.tuto-content');
-        
+
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => t.classList.remove('active'));
@@ -170,7 +329,7 @@
         // Audio File Logic
         const audioElement = new Audio('Audio%20tutoriel.m4a');
         let isPlaying = false;
-        
+
         const audioPlayBtn = document.getElementById('audioPlayBtn');
         const audioIcon = document.getElementById('audioIcon');
         const audioStatus = document.getElementById('audioStatus');
@@ -205,14 +364,15 @@
         }
 
         audioElement.addEventListener('ended', () => {
-             audioElement.currentTime = 0;
-             stopUI();
+            audioElement.currentTime = 0;
+            stopUI();
         });
 
         // stop audio if user browses away
         window.addEventListener('beforeunload', stopAudio);
-        
+
         audioPlayBtn.addEventListener('click', toggleAudio);
     </script>
 </body>
+
 </html>
