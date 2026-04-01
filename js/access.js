@@ -175,7 +175,7 @@ Voici le lien de la capsule vidéo : {futur lien de partage pour le jour où les
     try {
         if (navigator.share) {
             await navigator.share({
-                title: 'Capsule Vidéo pour le Rétablissement',
+                //title: 'Capsule Vidéo pour le Rétablissement',
                 text: message
             });
             showToast('Message prêt à être envoyé.');
