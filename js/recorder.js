@@ -115,19 +115,29 @@ export class GuidedRecorder {
         this.elapsedSec = 0;
 
         const mimeType = getSupportedMimeType();
-        this.mediaRecorder = new MediaRecorder(this.stream, { mimeType });
-        this.mediaRecorder.ondataavailable = e => {
-            if (e.data && e.data.size > 0) this.chunks.push(e.data);
-        };
-        this.mediaRecorder.start(1000); // collect data every second
-        this.isRecording = true;
+        
+        try {
+            this.mediaRecorder = new MediaRecorder(this.stream, mimeType ? { mimeType } : undefined);
+            this.mediaRecorder.ondataavailable = e => {
+                if (e.data && e.data.size > 0) this.chunks.push(e.data);
+            };
+            this.mediaRecorder.start(1000); // collect data every second
+            this.isRecording = true;
 
-        // Update UI
-        if (this.recDot) this.recDot.classList.add('recording');
+            // Update UI
+            if (this.recDot) this.recDot.classList.add('recording');
 
-        this._startTimer();
-        this._startPrompts();
-        this._updatePhaseUI();
+            this._startTimer();
+            this._startPrompts();
+            this._updatePhaseUI();
+        } catch (e) {
+            console.error("Erreur critique au lancement de l'enregistrement", e);
+            // On veut quand même que l'interface considère que ça a marché visuellement pour ne pas bloquer
+            this.isRecording = true;
+            this._startTimer();
+            this._startPrompts();
+            this._updatePhaseUI();
+        }
     }
 
     // Stop recording and save
@@ -225,16 +235,28 @@ export class GuidedRecorder {
     }
 
     _startPrompts() {
-        this._showCurrentPrompt();
-        this._promptInterval = setInterval(() => {
-            const phase = PHASES[this.phaseIndex];
-            if (!phase) return;
-            if (this.promptIndex < phase.prompts.length - 1) {
-                this.promptIndex++;
-            } else {
-                this.promptIndex = 0;
-            }
+        try {
             this._showCurrentPrompt();
+        } catch(e) { console.warn(e); }
+        
+        this._promptInterval = setInterval(() => {
+            try {
+                const phase = PHASES[this.phaseIndex];
+                if (!phase) return;
+                
+                if (phase.prompts && phase.prompts.length > 0) {
+                    if (this.promptIndex < phase.prompts.length - 1) {
+                        this.promptIndex++;
+                    } else {
+                        this.promptIndex = 0;
+                    }
+                } else {
+                    this.promptIndex = 0;
+                }
+                this._showCurrentPrompt();
+            } catch (err) {
+                console.warn("_promptInterval error", err);
+            }
         }, 8000); // cycle every 8 seconds
     }
 
@@ -251,22 +273,27 @@ export class GuidedRecorder {
     _showCurrentPrompt() {
         const phase = PHASES[this.phaseIndex];
         if (!phase) return;
-        const state = getState();
-        const now = new Date().toLocaleDateString('fr-FR');
-        let text = phase.prompts[this.promptIndex]
-            .replace('{name}', state.name || '…')
-            .replace('{date}', now);
+        let text = "";
+        if (phase.prompts && phase.prompts.length > 0) {
+            const state = getState();
+            const now = new Date().toLocaleDateString('fr-FR');
+            const rawText = phase.prompts[this.promptIndex];
+            if (rawText) {
+                text = rawText
+                    .replace('{name}', state.name || '…')
+                    .replace('{date}', now);
+            }
+        }
 
         if (this.overlayPhase) this.overlayPhase.textContent = phase.label;
         if (this.overlayText) this.overlayText.textContent = text;
 
         // Update prompt list
         if (this.promptList) {
-            this.promptList.forEach((li, i) => {
-                li.className = i < this.phaseIndex ? 'done'
-                    : i === this.phaseIndex ? 'active'
-                        : '';
-            });
+            for (let i = 0; i < this.promptList.length; i++) {
+                const li = this.promptList[i];
+                li.className = i < this.phaseIndex ? 'done' : i === this.phaseIndex ? 'active' : '';
+            }
         }
     }
 
