@@ -11,8 +11,8 @@
   <meta name="apple-mobile-web-app-title" content="Ma Capsule" />
   <title>Capsule Vidéo — Connexion</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
-  <link rel="icon" href="icons/LogoBleu.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/LogoBleuFondBlanc.png" />
+  <link rel="icon" href="icons/LogoBleuFondBlanc.png" type="image/png" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
@@ -100,8 +100,8 @@
       Installer l'application
     </button>
 
-    <p id="installHint" class="install-hint" style="display:none;">
-      📱 Ajoutez l'app sur votre écran d'accueil pour y accéder facilement.
+    <p id="installHint" class="install-hint" style="display:none; font-size:0.8rem; background:var(--blue-pale); color:var(--blue-dark); padding:12px; border-radius:12px; border:1px solid var(--blue-mid);">
+      📱 Pour installer l'application sur votre écran d'accueil :
     </p>
 
     <div style="text-align:center; margin-top: 20px;">
@@ -134,19 +134,25 @@
       installHint.style.display = 'block';
     });
 
-    // iOS Safari : pas d'événement natif → afficher un message guidé
+    // iOS : pas d'événement natif → afficher un message guidé impérativement sur Safari
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (isIOS && isSafari) {
-      installBtn.textContent = '';
-      installBtn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-          <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-        </svg>
-        Installer l'application`;
-      installBtn.style.display = 'flex';
-      installHint.style.display = 'block';
+    const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+
+    if (isIOS) {
+      if (isSafari) {
+        installHint.innerHTML = `
+          <strong>📱 Installation sur iPhone/iPad :</strong><br>
+          1. Appuyez sur le bouton de partage <span style="font-size:1.2rem; vertical-align:middle;">⬆</span> en bas (ou haut) de Safari.<br>
+          2. Choisissez <strong>« Sur l'écran d'accueil »</strong>.
+        `;
+        installHint.style.display = 'block';
+      } else {
+        installHint.innerHTML = `
+          <strong>⚠️ Attention :</strong><br>
+          Pour installer cette application sur iPhone, vous devez <strong>impérativement utiliser Safari</strong> (le bouton d'installation est bloqué sur Chrome ou Facebook).
+        `;
+        installHint.style.display = 'block';
+      }
     }
 
     installBtn.addEventListener('click', async () => {
