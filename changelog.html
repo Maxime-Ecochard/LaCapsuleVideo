@@ -23,9 +23,18 @@
             border-left: 5px solid var(--primary-color);
         }
 
-        .version-card.v3 { border-left-color: #3498db; }
-        .version-card.v2 { border-left-color: var(--primary-color); }
-        .version-card.v4 { border-left-color: #f39c12; border-style: dashed; }
+        .version-card.v3 {
+            border-left-color: #3498db;
+        }
+
+        .version-card.v2 {
+            border-left-color: var(--primary-color);
+        }
+
+        .version-card.v4 {
+            border-left-color: #f39c12;
+            border-style: dashed;
+        }
 
         .version-header {
             display: flex;
@@ -48,9 +57,20 @@
             text-transform: uppercase;
         }
 
-        .tag-stable { background: #e8f5e9; color: #2e7d32; }
-        .tag-current { background: #e3f2fd; color: #1565c0; }
-        .tag-future { background: #fff3e0; color: #ef6c00; }
+        .tag-stable {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-current {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .tag-future {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
 
         .change-category {
             margin-top: 15px;
@@ -88,9 +108,35 @@
             font-weight: bold;
         }
 
-        .badge-new { background: #4caf50; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; vertical-align: middle; }
-        .badge-fix { background: #f44336; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; vertical-align: middle; }
-        .badge-upd { background: #2196f3; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; vertical-align: middle; }
+        .badge-new {
+            background: #4caf50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .badge-fix {
+            background: #f44336;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .badge-upd {
+            background: #2196f3;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 
@@ -110,7 +156,7 @@
 
         <main class="page">
             <div class="changelog-container">
-                
+
                 <!-- Version 4 -->
                 <div class="version-card v4">
                     <div class="version-header">
@@ -118,10 +164,18 @@
                         <span class="version-tag tag-future">À venir</span>
                     </div>
                     <div class="change-category">
-                        <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3.5a.5.5 0 0 1-.5-.5v-4A.5.5 0 0 1 8 4z"/></svg> Prochaines étapes</h3>
+                        <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3.5a.5.5 0 0 1-.5-.5v-4A.5.5 0 0 1 8 4z" />
+                            </svg> Prochaines étapes</h3>
                         <ul class="change-list">
-                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Mode Téléprompteur</strong> : Saisissez votre script directement dans l'application.</li>
-                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Superposition Vidéo</strong> : Affichez votre texte en transparence pendant l'enregistrement pour ne rien oublier.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Mode
+                                    Téléprompteur</strong>&nbsp;: Saisissez votre script directement dans l'application.
+                            </li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Superposition
+                                    Vidéo</strong>&nbsp;: Affichez votre texte en transparence pendant l'enregistrement
+                                pour ne rien oublier.</li>
                         </ul>
                     </div>
                 </div>
@@ -135,19 +189,38 @@
                     <div class="change-category">
                         <h3>Fonctionnalités & Profil</h3>
                         <ul class="change-list">
-                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Écran de bienvenue "Faisons connaissance"</strong> : à la première connexion, recueil de vos informations (Nom, Prénom, Téléphone et Email) pour personnaliser vos messages et sécuriser les actions sensibles.</li>
-                            <li class="change-item"><span class="badge-new">NEW</span> Possibilité de prévenir directement ses contacts (SMS/Email) au moment de l'attribution d'un accès à la capsule.</li>
-                            <li class="change-item"><span class="badge-upd">UPD</span> Gestion avancée des contacts : mise à jour dynamique et ajout de champs Email et Téléphone (facultatifs).</li>
-                            <li class="change-item"><span class="badge-new">NEW</span> Journal d'activités détaillé (enregistrements, gestion des contacts) et accès à toutes ses capsules.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Écran de bienvenue
+                                    "Faisons connaissance"</strong>&nbsp;: à la première connexion, recueil de vos
+                                informations (Nom, Prénom, Téléphone et Email) pour personnaliser vos messages et
+                                sécuriser les actions sensibles.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> Possibilité de prévenir
+                                directement ses contacts (SMS/Email) au moment de l'attribution d'un accès à la capsule.
+                            </li>
+                            <li class="change-item"><span class="badge-upd">UPD</span> Gestion avancée des
+                                contacts&nbsp;: mise à jour dynamique et ajout de champs Email et Téléphone
+                                (facultatifs).</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> Journal d'activités détaillé
+                                (enregistrements, gestion des accès et historiques des modifications).</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> Historique complet des capsules
+                                avec accès à vos 2 dernières vidéos (la version actuelle et la précédente).</li>
                         </ul>
                     </div>
                     <div class="change-category">
                         <h3>Interface & Sécurité Anti-Crise</h3>
                         <ul class="change-list">
-                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Friction de sécurité :</strong> La suppression d'une capsule et la révocation des accès exigent désormais la re-saisie de l'Email et du code PIN pour prévenir les actes accidentels.</li>
-                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Corbeille 48h :</strong> Conservation temporaire des vidéos supprimées (sas temporel) pendant 48 heures avant effacement définitif.</li>
-                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Ultime recours :</strong> Lors d'une révocation globale, option par défaut pour conserver le dernier contact ajouté.</li>
-                            <li class="change-item"><span class="badge-upd">UPD</span> Harmonisation totale du thème de l'application vers la couleur Bleue du logo (barre de statut du téléphone, textes et boutons).</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Friction de
+                                    sécurité&nbsp;:</strong> La suppression d'une capsule et la révocation des accès
+                                exigent désormais la re-saisie de l'Email et du code PIN pour prévenir les actes
+                                accidentels.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Corbeille
+                                    48h&nbsp;:</strong> Conservation temporaire des vidéos supprimées (sas temporel)
+                                pendant 48 heures avant effacement définitif.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> <strong>Ultime
+                                    recours&nbsp;:</strong> Lors d'une révocation globale, option par défaut pour
+                                conserver le dernier contact ajouté.</li>
+                            <li class="change-item"><span class="badge-upd">UPD</span> Harmonisation totale du thème de
+                                l'application vers la couleur Bleue du logo (barre de statut du téléphone, textes et
+                                boutons).</li>
                         </ul>
                     </div>
                 </div>
@@ -161,16 +234,20 @@
                     <div class="change-category">
                         <h3>Enregistrement</h3>
                         <ul class="change-list">
-                            <li class="change-item"><span class="badge-new">NEW</span> Importation de vidéos depuis la galerie avec horodatage.</li>
-                            <li class="change-item"><span class="badge-new">NEW</span> Option de pause pendant l'enregistrement direct.</li>
-                            <li class="change-item"><span class="badge-fix">FIX</span> Sauvegarde locale automatique (résolution des erreurs de stockage).</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> Importation de vidéos depuis la
+                                galerie avec horodatage.</li>
+                            <li class="change-item"><span class="badge-new">NEW</span> Option de pause pendant
+                                l'enregistrement direct.</li>
+                            <li class="change-item"><span class="badge-fix">FIX</span> Sauvegarde locale automatique
+                                (résolution des erreurs de stockage).</li>
                         </ul>
                     </div>
                     <div class="change-category">
                         <h3>Accompagnement</h3>
                         <ul class="change-list">
                             <li class="change-item">Tutoriel interactif complet (Écrit, Audio, Vidéo avec avatar).</li>
-                            <li class="change-item">Intégration de la ressource "DAP mon GPS" pour préparer son script.</li>
+                            <li class="change-item">Intégration de la ressource "DAP mon GPS" pour préparer son script.
+                            </li>
                             <li class="change-item">Création de la section "À propos" et formulaire de contact.</li>
                         </ul>
                     </div>
