@@ -979,3 +979,68 @@ textarea:focus {
   background: #6dff9e;
   animation: blink 2s ease-in-out infinite;
 }
+
+/* ── Scientific Study Banner ── */
+.scientific-study-banner {
+    background: linear-gradient(135deg, #1e4a7a 0%, #3498db 100%);
+    color: white;
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    margin: 8px 0 24px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scientific-study-banner::after {
+    content: '🔬';
+    position: absolute;
+    right: -10px;
+    bottom: -15px;
+    font-size: 4rem;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+    pointer-events: none;
+}
+
+.banner-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.banner-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.banner-link {
+    background: white;
+    color: var(--blue-dark);
+    padding: 8px 16px;
+    border-radius: var(--radius-xl);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.banner-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background: var(--blue-pale);
+}
+
+.banner-link svg {
+    margin-top: -1px;
+}
