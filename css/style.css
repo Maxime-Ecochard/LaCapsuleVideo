@@ -1094,7 +1094,7 @@ textarea:focus {
 
 .teleprompter-text-content {
   color: rgba(255, 255, 255, 1);
-  font-size: 1.15rem;
+  font-size: var(--tp-font-size, 1.15rem);
   line-height: 1.6;
   font-weight: 500;
   text-shadow: 0 1px 4px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.6);
@@ -1518,26 +1518,25 @@ textarea:focus {
   }
 }
 
-/* ── Audio Meter ── */
+/* ── Audio Meter Waveform ── */
 .audio-meter {
     display: flex;
-    align-items: flex-end;
-    gap: 3px;
-    height: 16px;
+    align-items: center;
+    gap: 2.5px;
+    height: 24px;
     margin-left: 10px;
+    padding: 0 4px;
 }
 .meter-bar {
-    width: 4px;
+    width: 3px;
     height: 4px;
-    background-color: var(--gray-400);
-    border-radius: 2px;
-    transition: height 0.05s ease, background-color 0.1s ease;
+    background-color: var(--gray-300);
+    border-radius: 99px;
+    transition: height 0.08s ease, background-image 0.2s ease;
 }
-.meter-bar.active { background-color: var(--success); height: 8px; }
-.meter-bar.active:nth-child(2) { height: 10px; }
-.meter-bar.active:nth-child(3) { height: 12px; }
-.meter-bar.warning { background-color: var(--warning); height: 14px; }
-.meter-bar.danger { background-color: var(--danger); height: 16px; }
+.meter-bar.active {
+    background-image: linear-gradient(to top, var(--blue-dark), var(--blue-light));
+}
 
 /* ── Téléprompter : Font Size ── */
 .tp-font-group {

@@ -23,25 +23,25 @@ const PHASES = [
     },
     {
         id: 'pathologie',
-        label: '🧠 Signes d\'alertes, Repères, Souhaits, Ressources',
+        label: '🧠 Signes d\'alertes, Repères, Besoins, Recommandations, Ressources',
 
-        prompts: [/*
+        prompts: [
             'Quand je vais moins bien, mes signes d\'alerte sont…',
             'Ce qui m\'aide à garder l\'équilibre et mes repères sont…',
-            'En cas de difficulté ou de crise, mes souhaits sont…',
-            'Mes ressources et personnes ressources sont…',*/
+            'En cas de difficulté ou de crise, mes besoins et recommandations sont…',
+            'Mes ressources et personnes ressources sont…',
         ],
         duration: 60
     },
     {
         id: 'directives',
-        label: '📋 Mes Directives de Soins',
+        label: '📋 Mes Directives de Soins (DAP)',
 
-        prompts: [/*
-            'En cas de crise, je souhaite que l\'on…',
+        prompts: [
+            'En cas de crise, mes besoins et recommandations sont que l\'on…',
             'Je refuse expressément…',
             'Mon traitement habituel est…',
-            'Ma personne de confiance est…',*/
+            'Ma personne de confiance est…',
         ],
         duration: 90
     },
@@ -246,28 +246,42 @@ export class GuidedRecorder {
 
     _startAudioMeter() {
         if (!this.analyser || !this.audioMeterBars) return;
+        const barCount = this.audioMeterBars.length;
+        
         const drawMeter = () => {
             this.meterRAF = requestAnimationFrame(drawMeter);
             this.analyser.getByteFrequencyData(this.dataArray);
-            let sum = 0;
-            for(let i=0; i<this.dataArray.length; i++) sum += this.dataArray[i];
-            const average = sum / this.dataArray.length; // 0 to 255
             
-            let activeBars = 0;
-            if (average > 10) activeBars = 1;
-            if (average > 25) activeBars = 2;
-            if (average > 45) activeBars = 3;
-            if (average > 70) activeBars = 4;
-            if (average > 100) activeBars = 5;
-
-            this.audioMeterBars.forEach((bar, i) => {
-                bar.className = 'meter-bar';
-                if (i < activeBars) {
-                    bar.classList.add('active');
-                    if (i >= 3) bar.classList.add('warning');
-                    if (i === 4) bar.classList.add('danger');
+            // On divise les fréquences en barCount groupes
+            const step = Math.floor(this.dataArray.length / barCount);
+            
+            for (let i = 0; i < barCount; i++) {
+                // On prend la valeur max ou moyenne du segment de fréquence
+                let val = 0;
+                for (let j = 0; j < step; j++) {
+                    val += this.dataArray[i * step + j];
                 }
-            });
+                val = val / step;
+
+                // On applique un boost sur les fréquences de la voix (les premières barres)
+                // et on calme un peu les bruits de fond
+                // On applique un boost sur les fréquences de la voix
+                let height = 4;
+                if (val > 5) {
+                    // Mapping plus sensible : 5-150 vers 4-24px
+                    height = 4 + (Math.min(val, 150) / 150) * 20;
+                }
+                
+                const bar = this.audioMeterBars[i];
+                if (bar) {
+                    bar.style.height = `${height}px`;
+                    if (val > 15) {
+                        bar.classList.add('active');
+                    } else {
+                        bar.classList.remove('active');
+                    }
+                }
+            }
         };
         drawMeter();
     }

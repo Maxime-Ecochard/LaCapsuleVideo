@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#1e4a7a" />
     <title>Mon Script — Capsule Vidéo</title>
-    <meta name="description" content="Rédigez votre script de Directives Anticipées en Psychiatrie en 4 sections guidées, pour l'utiliser comme téléprompter lors de votre enregistrement." />
+    <meta name="description"
+        content="Rédigez votre script de Directives Anticipées en Psychiatrie en 4 sections guidées, pour l'utiliser comme téléprompter lors de votre enregistrement." />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
     <link rel="stylesheet" href="css/style.css" />
@@ -34,8 +35,9 @@
 
             <!-- Banner -->
             <div class="script-header-banner">
-                <h2>Rédigez votre script DAP</h2>
-                <p>Saisissez vos idées pour chaque partie. Ce script s'affichera en transparence pendant votre enregistrement.</p>
+                <h2>Rédigez votre script pour la Capsule</h2>
+                <p>Saisissez vos idées sous la forme de points clés pour chaque partie. Ce script s'affichera en
+                    transparence pendant votre enregistrement.</p>
             </div>
 
             <!-- Indicateur de progression -->
@@ -53,21 +55,21 @@
                     <div class="script-section-title">Identification, Date, Pathologie &amp; Traitement</div>
                     <div class="script-section-meta">
                         <span class="script-char-count" id="count0">0</span>
-                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                         </svg>
                     </div>
                 </div>
                 <div class="script-section-body">
                     <p class="script-hint">
-                        💡 Présentez-vous : votre prénom, la date d'enregistrement, votre pathologie si vous souhaitez la nommer, et vos traitements actuels.
+                        💡 Présentez-vous : votre prénom, la date d'enregistrement, votre pathologie si vous souhaitez
+                        la nommer, et vos traitements actuels.
                     </p>
-                    <textarea
-                        class="script-textarea"
-                        id="textarea0"
+                    <textarea class="script-textarea" id="textarea0"
                         placeholder="Exemple : Bonjour, je m'appelle [Prénom], nous sommes le [date]. Je souffre de [pathologie] et je suis actuellement traité(e) par [traitement(s)]…"
-                        rows="5"
-                    ></textarea>
+                        rows="5"></textarea>
                 </div>
             </div>
 
@@ -75,24 +77,26 @@
             <div class="script-section" id="sec1">
                 <div class="script-section-header" onclick="toggleSection(1)">
                     <div class="script-section-emoji">🧠</div>
-                    <div class="script-section-title">Signes d'alertes, Repères, Souhaits &amp; Ressources en cas de crise</div>
+                    <div class="script-section-title">Signes d'alertes, Repères, Besoins, Recommandations &amp;
+                        Ressources en cas de
+                        crise</div>
                     <div class="script-section-meta">
                         <span class="script-char-count" id="count1">0</span>
-                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                         </svg>
                     </div>
                 </div>
                 <div class="script-section-body">
                     <p class="script-hint">
-                        💡 Décrivez les signes qui montrent que vous n'allez pas bien, ce qui vous aide à vous stabiliser, et les ressources (personnes, lieux, numéros) à contacter.
+                        💡 Décrivez les signes qui montrent que vous n'allez pas bien, ainsi que vos besoins, vos
+                        recommandations et vos ressources pour vous stabiliser.
                     </p>
-                    <textarea
-                        class="script-textarea"
-                        id="textarea1"
-                        placeholder="Exemple : Quand je commence à [signe d'alerte], cela veut dire que j'ai besoin d'aide. Ce qui m'aide : [repères]. En cas de crise, contactez [ressource]…"
-                        rows="5"
-                    ></textarea>
+                    <textarea class="script-textarea" id="textarea1"
+                        placeholder="Exemple : Quand je commence à [signe d'alerte], cela veut dire que j'ai besoin d'aide. Ce qui m'aide : [repères]. En cas de crise, j'ai besoin de [besoins, recommandations et ressources]…"
+                        rows="5"></textarea>
                 </div>
             </div>
 
@@ -100,24 +104,25 @@
             <div class="script-section" id="sec2">
                 <div class="script-section-header" onclick="toggleSection(2)">
                     <div class="script-section-emoji">📋</div>
-                    <div class="script-section-title">Mes Directives de Soins</div>
+                    <div class="script-section-title">Mes Directives de Soins (DAP)</div>
                     <div class="script-section-meta">
                         <span class="script-char-count" id="count2">0</span>
-                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                         </svg>
                     </div>
                 </div>
                 <div class="script-section-body">
                     <p class="script-hint">
-                        💡 Exprimez vos souhaits et refus en période de crise : soins acceptés/refusés, présence de l'entourage, logement, traitements, et alternatives à l'hospitalisation.
+                        💡 Exprimez vos souhaits et refus en période de crise : soins
+                        acceptés/refusés, présence de
+                        l'entourage, logement, traitements, et alternatives à l'hospitalisation.
                     </p>
-                    <textarea
-                        class="script-textarea"
-                        id="textarea2"
-                        placeholder="Exemple : En période de crise, je souhaite / je refuse… Pour mon logement : … Concernant l'entourage : … Alternatives à l'hôpital que j'ai envisagées : …"
-                        rows="6"
-                    ></textarea>
+                    <textarea class="script-textarea" id="textarea2"
+                        placeholder="Exemple : En période de crise, je souhaite / je refuse… Pour mon logement : … Concernant l'entourage : … Alternatives à l'hospitalisation que j'ai envisagées : …"
+                        rows="6"></textarea>
                 </div>
             </div>
 
@@ -128,21 +133,21 @@
                     <div class="script-section-title">Mon Message d'Espoir</div>
                     <div class="script-section-meta">
                         <span class="script-char-count" id="count3">0</span>
-                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                         </svg>
                     </div>
                 </div>
                 <div class="script-section-body">
                     <p class="script-hint">
-                        💡 Transmettez-vous un message d'espoir avec tendresse, force ou humour. Rappelez-vous que rien n'est permanent.
+                        💡 Transmettez-vous un message d'espoir avec tendresse, force ou humour. Rappelez-vous que rien
+                        n'est permanent.
                     </p>
-                    <textarea
-                        class="script-textarea"
-                        id="textarea3"
-                        placeholder="Exemple : Si tu regardes cette vidéo, c'est que tu traverses une période difficile. Je veux te rappeler que tu as déjà surmonté des épreuves. Rien n'est permanent…"
-                        rows="5"
-                    ></textarea>
+                    <textarea class="script-textarea" id="textarea3"
+                        placeholder="Exemple : Si je regarde cette vidéo, c'est que je traverse une période difficile. Je veux me rappeler que j'ai déjà surmonté des épreuves. Rien n'est permanent…"
+                        rows="5"></textarea>
                 </div>
             </div>
 

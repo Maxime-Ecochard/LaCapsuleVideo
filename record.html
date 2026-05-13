@@ -111,9 +111,24 @@
                 <div class="rec-dot" id="recDot"></div>
                 <span id="timer">00:00</span>
                 <span style="color:var(--gray-400);font-weight:400; margin-right:8px;">/ 05:00 recommandé</span>
-                
+
                 <!-- Audio Meter -->
                 <div class="audio-meter" id="audioMeter" style="display:none;">
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
                     <div class="meter-bar"></div>
                     <div class="meter-bar"></div>
                     <div class="meter-bar"></div>
@@ -158,17 +173,13 @@
 
             <!-- Prompt guide list -->
             <div class="prompts-panel">
-                <h3>Guide — phases de l'enregistrement</h3>
-                <ul class="prompt-list" id="promptList">
-                    <li id="li0">🪪 Identification, Date, Pathologie &amp; Traitement</li>
-                    <li id="li1">🧠 Signes d'alertes, Repères, Souhaits, Ressources en cas de crise</li>
-                    <li id="li2">📋 Mes Directives de Soins</li>
-                    <li id="li3">💙 Mon Message d'Espoir</li>
-                </ul>
-                <div id="scriptActions" style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div id="scriptActions"
+                    style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <a href="script.html" class="script-edit-link" id="scriptEditLink">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 1.586L10.5 1.793 4.793 7.5l-1.202 3.006 3.006-1.201L12.793 4.086z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 1.586L10.5 1.793 4.793 7.5l-1.202 3.006 3.006-1.201L12.793 4.086z" />
                         </svg>
                         <span id="scriptEditLinkText">Rédiger mon script</span>
                     </a>
@@ -176,6 +187,14 @@
                         📜 Téléprompter
                     </button>
                 </div>
+
+                <h3>Guide — phases de l'enregistrement</h3>
+                <ul class="prompt-list" id="promptList">
+                    <li id="li0">🪪 Identification, Date, Pathologie &amp; Traitement</li>
+                    <li id="li1">🧠 Signes d'alertes, Repères, Besoins, Recommandations, Ressources en cas de crise</li>
+                    <li id="li2">📋 Mes Directives de Soins (DAP)</li>
+                    <li id="li3">💙 Mon Message d'Espoir</li>
+                </ul>
             </div>
 
             <!-- Bienveillance reminder -->
@@ -226,23 +245,23 @@
 
         const SECTIONS_META = [
             { emoji: '🪪', label: 'Identification & Traitement', key: 'section1' },
-            { emoji: '🧠', label: 'Signes d\'alertes & Crise',    key: 'section2' },
-            { emoji: '📋', label: 'Directives de Soins',           key: 'section3' },
-            { emoji: '💙', label: 'Message d\'Espoir',              key: 'section4' }
+            { emoji: '🧠', label: 'Signes d\'alertes, Repères, Besoins, Recommandations, Ressources', key: 'section2' },
+            { emoji: '📋', label: 'Directives de Soins (DAP)', key: 'section3' },
+            { emoji: '💙', label: 'Message d\'Espoir', key: 'section4' }
         ];
 
-        const tpOverlay       = document.getElementById('teleprompterOverlay');
-        const tpTextTrack     = document.getElementById('tpTextTrack');
-        const tpSectionInd    = document.getElementById('tpSectionIndicator');
-        const tpPauseBtn      = document.getElementById('tpPauseBtn');
-        const tpNextBtn       = document.getElementById('tpNextBtn');
-        const tpPrevBtn       = document.getElementById('tpPrevBtn');
-        const tpSlowBtn       = document.getElementById('tpSlowBtn');
-        const tpFastBtn       = document.getElementById('tpFastBtn');
-        const toggleBtn       = document.getElementById('teleprompterToggleBtn');
-        const tpControls      = document.getElementById('tpControls');
-        const scriptEditLink  = document.getElementById('scriptEditLink');
-        const scriptEditText  = document.getElementById('scriptEditLinkText');
+        const tpOverlay = document.getElementById('teleprompterOverlay');
+        const tpTextTrack = document.getElementById('tpTextTrack');
+        const tpSectionInd = document.getElementById('tpSectionIndicator');
+        const tpPauseBtn = document.getElementById('tpPauseBtn');
+        const tpNextBtn = document.getElementById('tpNextBtn');
+        const tpPrevBtn = document.getElementById('tpPrevBtn');
+        const tpSlowBtn = document.getElementById('tpSlowBtn');
+        const tpFastBtn = document.getElementById('tpFastBtn');
+        const toggleBtn = document.getElementById('teleprompterToggleBtn');
+        const tpControls = document.getElementById('tpControls');
+        const scriptEditLink = document.getElementById('scriptEditLink');
+        const scriptEditText = document.getElementById('scriptEditLinkText');
 
         // Charger le script au démarrage
         async function loadUserScript() {
@@ -285,7 +304,7 @@
                     tpTextTrack.appendChild(block);
                 }
             });
-            
+
             if (tpTextTrack.innerHTML === '') {
                 tpTextTrack.innerHTML = '<div class="teleprompter-text-content">(Aucun texte rédigé)</div>';
             }
@@ -298,7 +317,7 @@
                 tpCurrentSection = idx;
                 // On compense le padding-top de 45vh pour que la section saute au milieu
                 const startOffset = window.innerHeight * 0.45;
-                tpScrollY = -block.offsetTop + startOffset; 
+                tpScrollY = -block.offsetTop + startOffset;
                 tpTextTrack.style.transform = `translateY(${tpScrollY}px)`;
                 tpSectionInd.textContent = `${idx + 1} / 4`;
             } else if (idx < 3) {
@@ -314,14 +333,14 @@
                 if (!tpPaused) {
                     tpScrollY -= tpScrollSpeed;
                     const trackH = tpTextTrack.scrollHeight;
-                    const minY   = -(trackH); // On scrolle jusqu'à ce que tout le bloc soit sorti par le haut
+                    const minY = -(trackH); // On scrolle jusqu'à ce que tout le bloc soit sorti par le haut
                     if (tpScrollY < minY) {
                         tpPaused = true;
                         tpPauseBtn.textContent = '▶ Reprendre';
                         tpPauseBtn.classList.remove('tp-pause-btn');
                     } else {
                         tpTextTrack.style.transform = `translateY(${tpScrollY}px)`;
-                        
+
                         // Mettre à jour l'indicateur de section en fonction du scroll
                         updateSectionIndicatorFromScroll();
                     }
@@ -371,18 +390,18 @@
             tpScrollSpeed = Math.min(2.5, tpScrollSpeed + 0.2);
         });
 
-        let tpFontSize = 1.2; // rem (correspond au .teleprompter-text-content de base)
+        let tpFontSize = 1.2; // rem
         const tpFontDecBtn = document.getElementById('tpFontDecBtn');
         const tpFontIncBtn = document.getElementById('tpFontIncBtn');
-        
+
         tpFontDecBtn.addEventListener('click', () => {
             tpFontSize = Math.max(0.8, tpFontSize - 0.1);
-            tpTextTrack.style.fontSize = `${tpFontSize}rem`;
+            tpOverlay.style.setProperty('--tp-font-size', `${tpFontSize}rem`);
         });
-        
+
         tpFontIncBtn.addEventListener('click', () => {
             tpFontSize = Math.min(2.5, tpFontSize + 0.1);
-            tpTextTrack.style.fontSize = `${tpFontSize}rem`;
+            tpOverlay.style.setProperty('--tp-font-size', `${tpFontSize}rem`);
         });
 
         // Touch: tap sur la zone de texte = pause/reprise
@@ -409,7 +428,7 @@
                 // Démarrer le compte à rebours avant l'enregistrement
                 const countdownOverlay = document.getElementById('countdownOverlay');
                 const countdownNumber = document.getElementById('countdownNumber');
-                
+
                 countdownOverlay.style.display = 'flex';
                 placeholder.style.display = 'none';
                 let count = 3;
@@ -422,7 +441,7 @@
                     } else {
                         clearInterval(timer);
                         countdownOverlay.style.display = 'none';
-                        
+
                         // Lancement effectif de l'enregistrement
                         await recorder.start();
                         recordingState = 'recording';
@@ -435,7 +454,7 @@
                         pauseBtn.textContent = '⏸ Pause';
                         saveBtn.style.display = 'none';
                         importBtn.style.display = 'none';
-                        
+
                         document.getElementById('audioMeter').style.display = 'flex';
 
                         // Démarrer le téléprompter si activé
@@ -466,7 +485,7 @@
                 pauseBtn.style.display = 'none';
                 saveBtn.style.display = 'none';
                 importBtn.style.display = 'flex';
-                
+
                 document.getElementById('audioMeter').style.display = 'none';
 
                 // Arrêter le téléprompter
