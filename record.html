@@ -463,7 +463,8 @@
                         await recorder.start();
                         recordingState = 'recording';
 
-                        overlay.style.display = 'block';
+                        // Affichage du guide standard uniquement si le téléprompter n'est pas utilisé
+                        overlay.style.display = (tpEnabled && userScript) ? 'none' : 'block';
                         mainRecBtn.classList.add('recording');
                         mainRecBtn.title = 'Arrêter l\'enregistrement';
                         cancelBtn.style.display = 'inline-flex';

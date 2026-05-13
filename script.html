@@ -68,8 +68,8 @@
                         la nommer, et vos traitements actuels.
                     </p>
                     <textarea class="script-textarea" id="textarea0"
-                        placeholder="Exemple : Bonjour, je m'appelle [Prénom], nous sommes le [date]. Je souffre de [pathologie] et je suis actuellement traité(e) par [traitement(s)]…"
-                        rows="5"></textarea>
+                        placeholder="Prénom&#10;Date&#10;Type de pathologie&#10;Traitement(s) actuel(s)&#10;Allergies ou contre-indications médicales importantes"
+                        rows="6"></textarea>
                 </div>
             </div>
 
@@ -95,8 +95,8 @@
                         recommandations et vos ressources pour vous stabiliser.
                     </p>
                     <textarea class="script-textarea" id="textarea1"
-                        placeholder="Exemple : Quand je commence à [signe d'alerte], cela veut dire que j'ai besoin d'aide. Ce qui m'aide : [repères]. En cas de crise, j'ai besoin de [besoins, recommandations et ressources]…"
-                        rows="5"></textarea>
+                        placeholder="Mes signes avant-coureurs&#10;Ce qui m'aide à me stabiliser&#10;En cas de crise, j'ai besoin de ......, je me recommande .... et j'identifie mes ressources.&#10;Logistique urgente : [ex: nourrir mon chat, vider le frigo, prévenir mon employeur...]"
+                        rows="6"></textarea>
                 </div>
             </div>
 
@@ -121,7 +121,7 @@
                         l'entourage, logement, traitements, et alternatives à l'hospitalisation.
                     </p>
                     <textarea class="script-textarea" id="textarea2"
-                        placeholder="Exemple : En période de crise, je souhaite / je refuse… Pour mon logement : … Concernant l'entourage : … Alternatives à l'hospitalisation que j'ai envisagées : …"
+                        placeholder="En période de crise, j'accepte / je refuse [ex: soins, visites, activités, régime alimentaire particulier, traitement...]&#10;Alternatives à l'hospitalisation souhaitées"
                         rows="6"></textarea>
                 </div>
             </div>
@@ -146,7 +146,7 @@
                         n'est permanent.
                     </p>
                     <textarea class="script-textarea" id="textarea3"
-                        placeholder="Exemple : Si je regarde cette vidéo, c'est que je traverse une période difficile. Je veux me rappeler que j'ai déjà surmonté des épreuves. Rien n'est permanent…"
+                        placeholder="Rappel de mes forces et de mes ressources&#10;Rien n'est permanent, cette crise va passer.&#10;Encouragement"
                         rows="5"></textarea>
                 </div>
             </div>
@@ -197,10 +197,8 @@
             if (data) {
                 ['section1', 'section2', 'section3', 'section4'].forEach((key, idx) => {
                     const ta = document.getElementById(`textarea${idx}`);
-                    if (data[key]) {
-                        ta.value = data[key];
-                        updateCount(idx);
-                    }
+                    ta.value = data[key] || '';
+                    updateCount(idx);
                 });
                 updateProgress();
                 setAutosaveStatus('saved', `Dernière sauvegarde : ${formatDate(data.updatedAt)}`);
@@ -213,7 +211,7 @@
             const ta = document.getElementById(`textarea${idx}`);
             const count = document.getElementById(`count${idx}`);
             const len = ta.value.trim().length;
-            count.textContent = len > 0 ? `${len} car.` : '';
+            count.textContent = `${len} car.`;
             const sec = document.getElementById(`sec${idx}`);
             sec.classList.toggle('has-content', len > 0);
             updateProgress();
