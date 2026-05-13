@@ -67,6 +67,35 @@
                         <button class="btn btn-primary" id="confirmImportOverlayBtn">Sauvegarder</button>
                     </div>
                 </div>
+
+                <div class="teleprompter-overlay" id="teleprompterOverlay" style="display:none;">
+                    <div class="teleprompter-scroll-area">
+                        <div class="teleprompter-text-track" id="tpTextTrack">
+                            <!-- Sera rempli dynamiquement par tpPrepareContinuousScript() -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compte à rebours -->
+                <div class="countdown-overlay" id="countdownOverlay" style="display:none;">
+                    <span id="countdownNumber">3</span>
+                </div>
+            </div>
+
+            <!-- Barre de contrôles téléprompter (affichée uniquement pendant l'enregistrement) -->
+            <div class="teleprompter-controls" id="tpControls" style="display:none;">
+                <button class="tp-btn" id="tpPrevBtn" title="Section précédente">◀ Préc.</button>
+                <button class="tp-btn tp-pause-btn" id="tpPauseBtn" title="Pause/Reprise défilement">⏸ Pause</button>
+                <button class="tp-btn" id="tpNextBtn" title="Section suivante">Suiv. ▶</button>
+                <div class="tp-section-indicator" id="tpSectionIndicator">1 / 4</div>
+                <div class="tp-speed-group">
+                    <button class="tp-btn" id="tpSlowBtn" title="Lent">🐢</button>
+                    <button class="tp-btn" id="tpFastBtn" title="Rapide">🐇</button>
+                </div>
+                <div class="tp-font-group">
+                    <button class="tp-btn font-small" id="tpFontDecBtn" title="Réduire le texte">A-</button>
+                    <button class="tp-btn font-large" id="tpFontIncBtn" title="Agrandir le texte">A+</button>
+                </div>
             </div>
 
             <!-- Phase progress dots -->
@@ -78,10 +107,19 @@
             </div>
 
             <!-- Timer -->
-            <div class="rec-timer">
+            <div class="rec-timer" style="display:flex; align-items:center;">
                 <div class="rec-dot" id="recDot"></div>
                 <span id="timer">00:00</span>
-                <span style="color:var(--gray-400);font-weight:400;">/ 05:00 recommandé</span>
+                <span style="color:var(--gray-400);font-weight:400; margin-right:8px;">/ 05:00 recommandé</span>
+                
+                <!-- Audio Meter -->
+                <div class="audio-meter" id="audioMeter" style="display:none;">
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                    <div class="meter-bar"></div>
+                </div>
             </div>
 
             <!-- Controls -->
@@ -122,11 +160,22 @@
             <div class="prompts-panel">
                 <h3>Guide — phases de l'enregistrement</h3>
                 <ul class="prompt-list" id="promptList">
-                    <li id="li0">🪪 Identification, Date, Pathologie & Traitement</li>
+                    <li id="li0">🪪 Identification, Date, Pathologie &amp; Traitement</li>
                     <li id="li1">🧠 Signes d'alertes, Repères, Souhaits, Ressources en cas de crise</li>
                     <li id="li2">📋 Mes Directives de Soins</li>
                     <li id="li3">💙 Mon Message d'Espoir</li>
                 </ul>
+                <div id="scriptActions" style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <a href="script.html" class="script-edit-link" id="scriptEditLink">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 1.586L10.5 1.793 4.793 7.5l-1.202 3.006 3.006-1.201L12.793 4.086z"/>
+                        </svg>
+                        <span id="scriptEditLinkText">Rédiger mon script</span>
+                    </a>
+                    <button class="teleprompter-toggle-btn" id="teleprompterToggleBtn" style="display:none;">
+                        📜 Téléprompter
+                    </button>
+                </div>
             </div>
 
             <!-- Bienveillance reminder -->
@@ -139,11 +188,18 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
-        import { requireAuth, showToast, navigate, saveCapsule, getState, addHistoryEntry, getNextCapsuleNumber } from './js/app.js';
+        import { requireAuth, showToast, navigate, saveCapsule, getState, addHistoryEntry, getNextCapsuleNumber, getScript } from './js/app.js';
         import { GuidedRecorder } from './js/recorder.js';
         import { encryptData } from './js/crypto.js';
 
+        // Sécurité : Vérification immédiate au chargement/retour
         if (!requireAuth()) throw new Error('Not authenticated');
+        window.addEventListener('pageshow', () => {
+            if (!requireAuth()) return;
+            if (typeof loadUserScript === 'function') {
+                loadUserScript();
+            }
+        });
 
         const recorder = new GuidedRecorder({
             videoEl: document.getElementById('videoPreview'),
@@ -153,10 +209,188 @@
             promptList: document.querySelectorAll('#promptList li'),
             timerEl: document.getElementById('timer'),
             recDot: document.getElementById('recDot'),
+            audioMeterBars: document.querySelectorAll('#audioMeter .meter-bar'),
             onSaved: () => {
                 setTimeout(() => navigate('dashboard.html'), 1500);
             }
         });
+
+        // ── Téléprompter ────────────────────────────────────────────────────
+        let userScript = null;
+        let tpEnabled = false;
+        let tpCurrentSection = 0;
+        let tpScrollY = 0;
+        let tpScrollSpeed = 0.6; // px par frame
+        let tpPaused = false;
+        let tpRAF = null;
+
+        const SECTIONS_META = [
+            { emoji: '🪪', label: 'Identification & Traitement', key: 'section1' },
+            { emoji: '🧠', label: 'Signes d\'alertes & Crise',    key: 'section2' },
+            { emoji: '📋', label: 'Directives de Soins',           key: 'section3' },
+            { emoji: '💙', label: 'Message d\'Espoir',              key: 'section4' }
+        ];
+
+        const tpOverlay       = document.getElementById('teleprompterOverlay');
+        const tpTextTrack     = document.getElementById('tpTextTrack');
+        const tpSectionInd    = document.getElementById('tpSectionIndicator');
+        const tpPauseBtn      = document.getElementById('tpPauseBtn');
+        const tpNextBtn       = document.getElementById('tpNextBtn');
+        const tpPrevBtn       = document.getElementById('tpPrevBtn');
+        const tpSlowBtn       = document.getElementById('tpSlowBtn');
+        const tpFastBtn       = document.getElementById('tpFastBtn');
+        const toggleBtn       = document.getElementById('teleprompterToggleBtn');
+        const tpControls      = document.getElementById('tpControls');
+        const scriptEditLink  = document.getElementById('scriptEditLink');
+        const scriptEditText  = document.getElementById('scriptEditLinkText');
+
+        // Charger le script au démarrage
+        async function loadUserScript() {
+            userScript = await getScript();
+            const hasScript = userScript && (
+                userScript.section1 || userScript.section2 ||
+                userScript.section3 || userScript.section4
+            );
+            if (hasScript) {
+                toggleBtn.style.display = 'inline-flex';
+                scriptEditText.textContent = 'Modifier mon script';
+            } else {
+                toggleBtn.style.display = 'none';
+                scriptEditText.textContent = 'Rédiger mon script';
+            }
+        }
+        loadUserScript();
+
+        // Activer/désactiver le téléprompter
+        toggleBtn.addEventListener('click', () => {
+            tpEnabled = !tpEnabled;
+            toggleBtn.classList.toggle('active', tpEnabled);
+            toggleBtn.textContent = tpEnabled ? '📜 Téléprompter ✓' : '📜 Téléprompter';
+        });
+
+        // Préparer le script complet pour un défilement continu
+        function tpPrepareContinuousScript() {
+            tpTextTrack.innerHTML = '';
+            SECTIONS_META.forEach((meta, idx) => {
+                const text = userScript ? (userScript[meta.key] || '') : '';
+                if (text.trim()) {
+                    const block = document.createElement('div');
+                    block.className = 'tp-section-block';
+                    block.id = `tpSectionBlock${idx}`;
+                    block.style.marginBottom = '60px';
+                    block.innerHTML = `
+                        <div class="teleprompter-section-label">${meta.emoji} ${meta.label}</div>
+                        <div class="teleprompter-text-content">${text}</div>
+                    `;
+                    tpTextTrack.appendChild(block);
+                }
+            });
+            
+            if (tpTextTrack.innerHTML === '') {
+                tpTextTrack.innerHTML = '<div class="teleprompter-text-content">(Aucun texte rédigé)</div>';
+            }
+        }
+
+        // Sauter à une section spécifique
+        function tpJumpToSection(idx) {
+            const block = document.getElementById(`tpSectionBlock${idx}`);
+            if (block) {
+                tpCurrentSection = idx;
+                // On compense le padding-top de 45vh pour que la section saute au milieu
+                const startOffset = window.innerHeight * 0.45;
+                tpScrollY = -block.offsetTop + startOffset; 
+                tpTextTrack.style.transform = `translateY(${tpScrollY}px)`;
+                tpSectionInd.textContent = `${idx + 1} / 4`;
+            } else if (idx < 3) {
+                // Si la section est vide, on essaie la suivante
+                tpJumpToSection(idx + 1);
+            }
+        }
+
+        // Défilement animé
+        function tpStartScroll() {
+            if (tpRAF) cancelAnimationFrame(tpRAF);
+            function step() {
+                if (!tpPaused) {
+                    tpScrollY -= tpScrollSpeed;
+                    const trackH = tpTextTrack.scrollHeight;
+                    const minY   = -(trackH); // On scrolle jusqu'à ce que tout le bloc soit sorti par le haut
+                    if (tpScrollY < minY) {
+                        tpPaused = true;
+                        tpPauseBtn.textContent = '▶ Reprendre';
+                        tpPauseBtn.classList.remove('tp-pause-btn');
+                    } else {
+                        tpTextTrack.style.transform = `translateY(${tpScrollY}px)`;
+                        
+                        // Mettre à jour l'indicateur de section en fonction du scroll
+                        updateSectionIndicatorFromScroll();
+                    }
+                }
+                tpRAF = requestAnimationFrame(step);
+            }
+            tpRAF = requestAnimationFrame(step);
+        }
+
+        function updateSectionIndicatorFromScroll() {
+            SECTIONS_META.forEach((meta, idx) => {
+                const block = document.getElementById(`tpSectionBlock${idx}`);
+                if (block) {
+                    const offset = block.offsetTop + tpScrollY;
+                    if (offset < 150 && offset > -block.offsetHeight) {
+                        tpCurrentSection = idx;
+                        tpSectionInd.textContent = `${idx + 1} / 4`;
+                    }
+                }
+            });
+        }
+
+        function tpStopScroll() {
+            if (tpRAF) { cancelAnimationFrame(tpRAF); tpRAF = null; }
+        }
+
+        // Contrôles
+        tpPauseBtn.addEventListener('click', () => {
+            tpPaused = !tpPaused;
+            tpPauseBtn.textContent = tpPaused ? '▶ Reprendre' : '⏸ Pause';
+            tpPauseBtn.classList.toggle('tp-pause-btn', !tpPaused);
+        });
+
+        tpNextBtn.addEventListener('click', () => {
+            if (tpCurrentSection < 3) tpJumpToSection(tpCurrentSection + 1);
+        });
+
+        tpPrevBtn.addEventListener('click', () => {
+            if (tpCurrentSection > 0) tpJumpToSection(tpCurrentSection - 1);
+        });
+
+        tpSlowBtn.addEventListener('click', () => {
+            tpScrollSpeed = Math.max(0.2, tpScrollSpeed - 0.2);
+        });
+
+        tpFastBtn.addEventListener('click', () => {
+            tpScrollSpeed = Math.min(2.5, tpScrollSpeed + 0.2);
+        });
+
+        let tpFontSize = 1.2; // rem (correspond au .teleprompter-text-content de base)
+        const tpFontDecBtn = document.getElementById('tpFontDecBtn');
+        const tpFontIncBtn = document.getElementById('tpFontIncBtn');
+        
+        tpFontDecBtn.addEventListener('click', () => {
+            tpFontSize = Math.max(0.8, tpFontSize - 0.1);
+            tpTextTrack.style.fontSize = `${tpFontSize}rem`;
+        });
+        
+        tpFontIncBtn.addEventListener('click', () => {
+            tpFontSize = Math.min(2.5, tpFontSize + 0.1);
+            tpTextTrack.style.fontSize = `${tpFontSize}rem`;
+        });
+
+        // Touch: tap sur la zone de texte = pause/reprise
+        tpTextTrack.addEventListener('click', () => {
+            tpPaused = !tpPaused;
+            tpPauseBtn.textContent = tpPaused ? '▶ Reprendre' : '⏸ Pause';
+        });
+
 
         const mainRecBtn = document.getElementById('mainRecBtn');
         const pauseBtn = document.getElementById('pauseBtn');
@@ -172,19 +406,53 @@
                 // Start
                 const ok = await recorder.initCamera();
                 if (!ok) return;
-                await recorder.start();
-                recordingState = 'recording';
-
+                // Démarrer le compte à rebours avant l'enregistrement
+                const countdownOverlay = document.getElementById('countdownOverlay');
+                const countdownNumber = document.getElementById('countdownNumber');
+                
+                countdownOverlay.style.display = 'flex';
                 placeholder.style.display = 'none';
-                overlay.style.display = 'block';
-                mainRecBtn.classList.add('recording');
-                mainRecBtn.title = 'Arrêter l\'enregistrement';
-                cancelBtn.style.display = 'inline-flex';
-                pauseBtn.style.display = 'inline-flex';
-                pauseBtn.textContent = '⏸ Pause';
-                saveBtn.style.display = 'none';
-                importBtn.style.display = 'none';
+                let count = 3;
+                countdownNumber.textContent = count;
 
+                const timer = setInterval(async () => {
+                    count--;
+                    if (count > 0) {
+                        countdownNumber.textContent = count;
+                    } else {
+                        clearInterval(timer);
+                        countdownOverlay.style.display = 'none';
+                        
+                        // Lancement effectif de l'enregistrement
+                        await recorder.start();
+                        recordingState = 'recording';
+
+                        overlay.style.display = 'block';
+                        mainRecBtn.classList.add('recording');
+                        mainRecBtn.title = 'Arrêter l\'enregistrement';
+                        cancelBtn.style.display = 'inline-flex';
+                        pauseBtn.style.display = 'inline-flex';
+                        pauseBtn.textContent = '⏸ Pause';
+                        saveBtn.style.display = 'none';
+                        importBtn.style.display = 'none';
+                        
+                        document.getElementById('audioMeter').style.display = 'flex';
+
+                        // Démarrer le téléprompter si activé
+                        if (tpEnabled && userScript) {
+                            tpPrepareContinuousScript();
+                            tpCurrentSection = 0;
+                            tpPaused = false;
+                            tpScrollY = 0;
+                            tpTextTrack.style.transform = 'translateY(0)';
+                            tpSectionInd.textContent = '1 / 4';
+                            tpPauseBtn.textContent = '⏸ Pause';
+                            tpOverlay.style.display = 'flex';
+                            tpControls.style.display = 'flex';
+                            tpStartScroll();
+                        }
+                    }
+                }, 1000);
             } else if (recordingState === 'recording' || recordingState === 'paused') {
                 // Stop
                 mainRecBtn.disabled = true;
@@ -198,6 +466,13 @@
                 pauseBtn.style.display = 'none';
                 saveBtn.style.display = 'none';
                 importBtn.style.display = 'flex';
+                
+                document.getElementById('audioMeter').style.display = 'none';
+
+                // Arrêter le téléprompter
+                tpOverlay.style.display = 'none';
+                tpControls.style.display = 'none';
+                tpStopScroll();
                 // auto-saved in onSaved callback
             }
         });
@@ -208,11 +483,25 @@
                 recordingState = 'paused';
                 pauseBtn.textContent = '▶ Reprendre';
                 mainRecBtn.classList.remove('recording');
+
+                // Synchroniser le téléprompter
+                if (tpEnabled) {
+                    tpPaused = true;
+                    tpPauseBtn.textContent = '▶ Reprendre';
+                    tpPauseBtn.classList.remove('tp-pause-btn');
+                }
             } else if (recordingState === 'paused') {
                 recorder.resume();
                 recordingState = 'recording';
                 pauseBtn.textContent = '⏸ Pause';
                 mainRecBtn.classList.add('recording');
+
+                // Synchroniser le téléprompter
+                if (tpEnabled) {
+                    tpPaused = false;
+                    tpPauseBtn.textContent = '⏸ Pause';
+                    tpPauseBtn.classList.add('tp-pause-btn');
+                }
             }
         });
 
@@ -227,10 +516,19 @@
                 pauseBtn.style.display = 'none';
                 saveBtn.style.display = 'none';
                 importBtn.style.display = 'flex';
+                document.getElementById('audioMeter').style.display = 'none';
                 document.getElementById('timer').textContent = '00:00';
                 document.querySelectorAll('.phase-dot').forEach(d => d.className = 'phase-dot');
+
+                // Arrêter le téléprompter
+                tpOverlay.style.display = 'none';
+                tpControls.style.display = 'none';
+                tpStopScroll();
             }
         });
+
+        window.addEventListener('beforeunload', () => { recorder.destroy(); tpStopScroll(); });
+
 
         // ── Import logic ────────────────────────────────────────────────────────
         const importBtn = document.getElementById('importBtn');
@@ -330,8 +628,8 @@
             navigate('dashboard.html');
         });
 
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', () => recorder.destroy());
+
+
     </script>
 </body>
 

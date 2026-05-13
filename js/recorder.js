@@ -70,6 +70,7 @@ export class GuidedRecorder {
         this.promptList = opts.promptList;     // NodeList of .prompt-list li
         this.timerEl = opts.timerEl;        // timer display element
         this.recDot = opts.recDot;         // blinking dot element
+        this.audioMeterBars = opts.audioMeterBars; // NodeList of meter bars
         this.onSaved = opts.onSaved || (() => { });
 
         this.stream = null;
@@ -82,6 +83,12 @@ export class GuidedRecorder {
         this.elapsedSec = 0;
         this._timerInterval = null;
         this._promptInterval = null;
+        
+        // Audio Meter properties
+        this.audioContext = null;
+        this.analyser = null;
+        this.dataArray = null;
+        this.meterRAF = null;
     }
 
     // Initialize camera stream
@@ -94,6 +101,19 @@ export class GuidedRecorder {
             this.videoEl.srcObject = this.stream;
             this.videoEl.muted = true;
             await this.videoEl.play();
+            
+            // Setup Audio Meter
+            if (this.audioMeterBars && this.audioMeterBars.length > 0) {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.analyser = this.audioContext.createAnalyser();
+                    const source = this.audioContext.createMediaStreamSource(this.stream);
+                    source.connect(this.analyser);
+                    this.analyser.fftSize = 256;
+                    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+                } catch (e) { console.warn('AudioContext not supported', e); }
+            }
+            
             return true;
         } catch (err) {
             console.error('Camera error:', err);
@@ -130,6 +150,7 @@ export class GuidedRecorder {
             this._startTimer();
             this._startPrompts();
             this._updatePhaseUI();
+            this._startAudioMeter();
         } catch (e) {
             console.error("Erreur critique au lancement de l'enregistrement", e);
             // On veut quand même que l'interface considère que ça a marché visuellement pour ne pas bloquer
@@ -137,6 +158,7 @@ export class GuidedRecorder {
             this._startTimer();
             this._startPrompts();
             this._updatePhaseUI();
+            this._startAudioMeter();
         }
     }
 
@@ -146,6 +168,7 @@ export class GuidedRecorder {
 
         this._stopTimer();
         this._stopPrompts();
+        this._stopAudioMeter();
         this.isRecording = false;
         if (this.recDot) this.recDot.classList.remove('recording');
 
@@ -188,6 +211,7 @@ export class GuidedRecorder {
             this.mediaRecorder.pause();
             this._stopTimer();
             this._stopPrompts();
+            this._stopAudioMeter();
             if (this.recDot) this.recDot.classList.remove('recording');
         }
     }
@@ -197,6 +221,7 @@ export class GuidedRecorder {
             this.mediaRecorder.resume();
             this._startTimer();
             this._startPrompts();
+            this._startAudioMeter();
             if (this.recDot) this.recDot.classList.add('recording');
         }
     }
@@ -205,6 +230,12 @@ export class GuidedRecorder {
     destroy() {
         this._stopTimer();
         this._stopPrompts();
+        this._stopAudioMeter();
+        
+        if (this.audioContext && this.audioContext.state !== 'closed') {
+            this.audioContext.close();
+        }
+        
         if (this.stream) {
             this.stream.getTracks().forEach(t => t.stop());
             this.stream = null;
@@ -212,6 +243,44 @@ export class GuidedRecorder {
     }
 
     // ── Private ────────────────────────────────────────────────────────────
+
+    _startAudioMeter() {
+        if (!this.analyser || !this.audioMeterBars) return;
+        const drawMeter = () => {
+            this.meterRAF = requestAnimationFrame(drawMeter);
+            this.analyser.getByteFrequencyData(this.dataArray);
+            let sum = 0;
+            for(let i=0; i<this.dataArray.length; i++) sum += this.dataArray[i];
+            const average = sum / this.dataArray.length; // 0 to 255
+            
+            let activeBars = 0;
+            if (average > 10) activeBars = 1;
+            if (average > 25) activeBars = 2;
+            if (average > 45) activeBars = 3;
+            if (average > 70) activeBars = 4;
+            if (average > 100) activeBars = 5;
+
+            this.audioMeterBars.forEach((bar, i) => {
+                bar.className = 'meter-bar';
+                if (i < activeBars) {
+                    bar.classList.add('active');
+                    if (i >= 3) bar.classList.add('warning');
+                    if (i === 4) bar.classList.add('danger');
+                }
+            });
+        };
+        drawMeter();
+    }
+
+    _stopAudioMeter() {
+        if (this.meterRAF) {
+            cancelAnimationFrame(this.meterRAF);
+            this.meterRAF = null;
+        }
+        if (this.audioMeterBars) {
+            this.audioMeterBars.forEach(bar => bar.className = 'meter-bar');
+        }
+    }
 
     _startTimer() {
         this._timerInterval = setInterval(() => {

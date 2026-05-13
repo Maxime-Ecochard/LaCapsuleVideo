@@ -183,7 +183,9 @@
         </main>
     </div>
 
-    <script>
+    <script type="module">
+        import { requireAuth, navigate } from './js/app.js';
+
         document.getElementById('backBtn').addEventListener('click', () => {
             const state = JSON.parse(sessionStorage.getItem('capsule_user')) || {};
             const isLogged = state.name && state.pin;
@@ -192,8 +194,19 @@
             if (document.referrer && !document.referrer.includes('changelog.html') && !document.referrer.includes('about.html')) {
                 window.history.back();
             } else {
-                window.location.href = homePage;
+                window.location.replace(homePage);
             }
+        });
+
+        // Sécurité : Re-vérifier l'auth si on revient sur la page via le cache
+        window.addEventListener('pageshow', () => {
+            const state = JSON.parse(sessionStorage.getItem('capsule_user')) || {};
+            const isLogged = state.name && state.pin;
+            // Si on était loggué mais qu'on ne l'est plus (ex: auto-lock), on dégage
+            if (sessionStorage.getItem('was_logged') === 'true' && !isLogged) {
+                window.location.replace('index.html');
+            }
+            if (isLogged) sessionStorage.setItem('was_logged', 'true');
         });
 
         function sendEmail() {
@@ -207,6 +220,7 @@
 
             window.location.href = `mailto:milieandre973@gmail.com?subject=${subject}&body=${encodeURIComponent(body)}`;
         }
+        window.sendEmail = sendEmail;
     </script>
 </body>
 

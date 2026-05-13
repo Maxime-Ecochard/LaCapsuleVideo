@@ -1044,3 +1044,509 @@ textarea:focus {
 .banner-link svg {
     margin-top: -1px;
 }
+
+/* ══════════════════════════════════════════════════
+   Téléprompter Overlay
+   ══════════════════════════════════════════════════ */
+
+.teleprompter-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Zone de texte défilant */
+.teleprompter-scroll-area {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.teleprompter-text-track {
+  width: 100%;
+  padding: 45vh 20px 60vh;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.teleprompter-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(52, 152, 219, 0.95);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.teleprompter-text-content {
+  color: rgba(255, 255, 255, 1);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.6);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Barre de contrôle téléprompter (déplacée sous la vidéo) */
+.teleprompter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: var(--white);
+  border-radius: 16px;
+  margin: 15px 20px 0;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+}
+
+.tp-btn {
+  background: var(--blue-mist);
+  border: 1px solid var(--blue-light);
+  color: var(--blue-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tp-btn:hover {
+  background: var(--blue-pale);
+  border-color: var(--blue-mid);
+}
+
+.tp-btn:active {
+  background: var(--blue-light);
+  color: white;
+  transform: scale(0.96);
+}
+
+.tp-btn.tp-pause-btn {
+  background: var(--blue-dark);
+  border-color: var(--blue-dark);
+  color: white;
+  flex: 2;
+  box-shadow: 0 4px 12px rgba(30, 74, 122, 0.2);
+}
+
+.tp-section-indicator {
+  width: 100%;
+  text-align: center;
+  color: var(--blue-dark);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 0;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.tp-speed-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-100);
+}
+
+.tp-speed-label {
+  color: var(--gray-600);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+
+/* Bouton d'activation du téléprompter (avant enregistrement) */
+.teleprompter-toggle-btn {
+  background: rgba(30, 74, 122, 0.12);
+  border: 1.5px dashed var(--blue-mid);
+  color: var(--blue-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.teleprompter-toggle-btn:hover {
+  background: var(--blue-pale);
+  border-style: solid;
+}
+
+.teleprompter-toggle-btn.active {
+  background: var(--blue-dark);
+  color: white;
+  border-color: var(--blue-dark);
+  border-style: solid;
+}
+
+/* ══════════════════════════════════════════════════
+   Page Script DAP (script.html)
+   ══════════════════════════════════════════════════ */
+
+.script-page {
+  padding: 20px;
+}
+
+.script-header-banner {
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  color: white;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.script-header-banner::before {
+  content: '📝';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  opacity: 0.15;
+}
+
+.script-header-banner h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.script-header-banner p {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+/* Sections accordéon */
+.script-section {
+  background: var(--white);
+  border: 1.5px solid var(--blue-pale);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.25s;
+}
+
+.script-section.has-content {
+  border-color: var(--blue-light);
+}
+
+.script-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  background: var(--white);
+}
+
+.script-section-header:hover {
+  background: var(--blue-mist);
+}
+
+.script-section-emoji {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-pale);
+  border-radius: var(--radius-sm);
+}
+
+.script-section-title {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--blue-dark);
+  line-height: 1.35;
+}
+
+.script-section-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.script-char-count {
+  font-size: 0.68rem;
+  color: var(--gray-400);
+  font-weight: 500;
+}
+
+.script-section-chevron {
+  color: var(--gray-400);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+
+.script-section.open .script-section-chevron {
+  transform: rotate(180deg);
+}
+
+.script-section-body {
+  display: none;
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--blue-pale);
+}
+
+.script-section.open .script-section-body {
+  display: block;
+}
+
+.script-hint {
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  font-style: italic;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.script-textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-family: inherit;
+  color: var(--gray-800);
+  background: var(--blue-mist);
+  transition: var(--transition);
+  outline: none;
+  line-height: 1.6;
+}
+
+.script-textarea:focus {
+  border-color: var(--blue-mid);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.12);
+  background: var(--white);
+}
+
+/* Barre d'état de sauvegarde */
+.script-save-bar {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--blue-pale);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 50;
+  box-shadow: 0 -4px 16px rgba(30, 74, 122, 0.08);
+}
+
+.script-autosave-indicator {
+  flex: 1;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s;
+}
+
+.script-autosave-indicator.saved {
+  color: #4caf50;
+}
+
+.script-autosave-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Indicateur de complétion */
+.script-progress-strip {
+  display: flex;
+  gap: 4px;
+  padding: 0 0 16px;
+}
+
+.script-progress-item {
+  flex: 1;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--gray-200);
+  transition: background 0.4s;
+}
+
+.script-progress-item.filled {
+  background: var(--blue-mid);
+}
+
+/* Lien éditeur script sur page record */
+.script-edit-link {
+  font-size: 0.78rem;
+  color: var(--blue-mid);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.script-edit-link:hover {
+  color: var(--blue-dark);
+  text-decoration: underline;
+}
+
+/* ── Skeleton Loading ── */
+.skeleton {
+  background: #e0e5eb;
+  background: linear-gradient(90deg, #e0e5eb 25%, #f0f3f6 50%, #e0e5eb 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite linear;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-video {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+}
+
+.skeleton-chip {
+  height: 24px;
+  width: 80px;
+  border-radius: 99px;
+  display: inline-block;
+}
+
+/* ── Compte à rebours ── */
+.countdown-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+}
+
+#countdownNumber {
+  font-size: 8rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  animation: countdownPop 1s infinite ease-out;
+}
+
+@keyframes countdownPop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* ── Audio Meter ── */
+.audio-meter {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 16px;
+    margin-left: 10px;
+}
+.meter-bar {
+    width: 4px;
+    height: 4px;
+    background-color: var(--gray-400);
+    border-radius: 2px;
+    transition: height 0.05s ease, background-color 0.1s ease;
+}
+.meter-bar.active { background-color: var(--success); height: 8px; }
+.meter-bar.active:nth-child(2) { height: 10px; }
+.meter-bar.active:nth-child(3) { height: 12px; }
+.meter-bar.warning { background-color: var(--warning); height: 14px; }
+.meter-bar.danger { background-color: var(--danger); height: 16px; }
+
+/* ── Téléprompter : Font Size ── */
+.tp-font-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    padding-left: 8px;
+    margin-left: 8px;
+}
+.tp-btn.font-small { font-size: 0.8rem; font-weight: bold; }
+.tp-btn.font-large { font-size: 1.1rem; font-weight: bold; }

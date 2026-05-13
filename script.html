@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1e4a7a" />
+    <title>Mon Script — Capsule Vidéo</title>
+    <meta name="description" content="Rédigez votre script de Directives Anticipées en Psychiatrie en 4 sections guidées, pour l'utiliser comme téléprompter lors de votre enregistrement." />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/LogoBleu.png" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <!-- Header -->
+        <header class="app-header">
+            <button class="header-back" id="backBtn" title="Retour">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </button>
+            <div>
+                <h1>Mon Script</h1>
+                <span class="subtitle">Préparez votre Capsule Vidéo</span>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="page script-page" style="padding-bottom: 80px;">
+
+            <!-- Banner -->
+            <div class="script-header-banner">
+                <h2>Rédigez votre script DAP</h2>
+                <p>Saisissez vos idées pour chaque partie. Ce script s'affichera en transparence pendant votre enregistrement.</p>
+            </div>
+
+            <!-- Indicateur de progression -->
+            <div class="script-progress-strip" id="progressStrip">
+                <div class="script-progress-item" id="prog0"></div>
+                <div class="script-progress-item" id="prog1"></div>
+                <div class="script-progress-item" id="prog2"></div>
+                <div class="script-progress-item" id="prog3"></div>
+            </div>
+
+            <!-- Section 1 -->
+            <div class="script-section open" id="sec0">
+                <div class="script-section-header" onclick="toggleSection(0)">
+                    <div class="script-section-emoji">🪪</div>
+                    <div class="script-section-title">Identification, Date, Pathologie &amp; Traitement</div>
+                    <div class="script-section-meta">
+                        <span class="script-char-count" id="count0">0</span>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="script-section-body">
+                    <p class="script-hint">
+                        💡 Présentez-vous : votre prénom, la date d'enregistrement, votre pathologie si vous souhaitez la nommer, et vos traitements actuels.
+                    </p>
+                    <textarea
+                        class="script-textarea"
+                        id="textarea0"
+                        placeholder="Exemple : Bonjour, je m'appelle [Prénom], nous sommes le [date]. Je souffre de [pathologie] et je suis actuellement traité(e) par [traitement(s)]…"
+                        rows="5"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="script-section" id="sec1">
+                <div class="script-section-header" onclick="toggleSection(1)">
+                    <div class="script-section-emoji">🧠</div>
+                    <div class="script-section-title">Signes d'alertes, Repères, Souhaits &amp; Ressources en cas de crise</div>
+                    <div class="script-section-meta">
+                        <span class="script-char-count" id="count1">0</span>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="script-section-body">
+                    <p class="script-hint">
+                        💡 Décrivez les signes qui montrent que vous n'allez pas bien, ce qui vous aide à vous stabiliser, et les ressources (personnes, lieux, numéros) à contacter.
+                    </p>
+                    <textarea
+                        class="script-textarea"
+                        id="textarea1"
+                        placeholder="Exemple : Quand je commence à [signe d'alerte], cela veut dire que j'ai besoin d'aide. Ce qui m'aide : [repères]. En cas de crise, contactez [ressource]…"
+                        rows="5"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="script-section" id="sec2">
+                <div class="script-section-header" onclick="toggleSection(2)">
+                    <div class="script-section-emoji">📋</div>
+                    <div class="script-section-title">Mes Directives de Soins</div>
+                    <div class="script-section-meta">
+                        <span class="script-char-count" id="count2">0</span>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="script-section-body">
+                    <p class="script-hint">
+                        💡 Exprimez vos souhaits et refus en période de crise : soins acceptés/refusés, présence de l'entourage, logement, traitements, et alternatives à l'hospitalisation.
+                    </p>
+                    <textarea
+                        class="script-textarea"
+                        id="textarea2"
+                        placeholder="Exemple : En période de crise, je souhaite / je refuse… Pour mon logement : … Concernant l'entourage : … Alternatives à l'hôpital que j'ai envisagées : …"
+                        rows="6"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="script-section" id="sec3">
+                <div class="script-section-header" onclick="toggleSection(3)">
+                    <div class="script-section-emoji">💙</div>
+                    <div class="script-section-title">Mon Message d'Espoir</div>
+                    <div class="script-section-meta">
+                        <span class="script-char-count" id="count3">0</span>
+                        <svg class="script-section-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="script-section-body">
+                    <p class="script-hint">
+                        💡 Transmettez-vous un message d'espoir avec tendresse, force ou humour. Rappelez-vous que rien n'est permanent.
+                    </p>
+                    <textarea
+                        class="script-textarea"
+                        id="textarea3"
+                        placeholder="Exemple : Si tu regardes cette vidéo, c'est que tu traverses une période difficile. Je veux te rappeler que tu as déjà surmonté des épreuves. Rien n'est permanent…"
+                        rows="5"
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 4px;">
+                💙 Votre script est sauvegardé uniquement sur cet appareil. Il ne sera jamais partagé.
+            </div>
+
+        </main>
+
+        <!-- Save Bar -->
+        <div class="script-save-bar">
+            <div class="script-autosave-indicator" id="autosaveIndicator">
+                <div class="script-autosave-dot"></div>
+                <span id="autosaveText">Modifications non sauvegardées</span>
+            </div>
+            <button class="btn btn-primary btn-sm" id="saveBtn" style="flex-shrink:0;">
+                ✅ Sauvegarder
+            </button>
+        </div>
+
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { requireAuth, showToast, saveScript, getScript } from './js/app.js';
+
+        // Auth guard
+        if (!requireAuth()) throw new Error('Not authenticated');
+        window.addEventListener('pageshow', () => { if (!requireAuth()) return; });
+
+        // ── Accordéon ──────────────────────────────────────────────────────
+        window.toggleSection = function (idx) {
+            const sec = document.getElementById(`sec${idx}`);
+            const isOpen = sec.classList.contains('open');
+            // Fermer toutes les sections
+            [0, 1, 2, 3].forEach(i => document.getElementById(`sec${i}`).classList.remove('open'));
+            // Ouvrir celle-ci si elle était fermée
+            if (!isOpen) sec.classList.add('open');
+        };
+
+        // ── Chargement du script sauvegardé ────────────────────────────────
+        let isDirty = false;
+        let autosaveTimer = null;
+
+        async function loadScript() {
+            const data = await getScript();
+            if (data) {
+                ['section1', 'section2', 'section3', 'section4'].forEach((key, idx) => {
+                    const ta = document.getElementById(`textarea${idx}`);
+                    if (data[key]) {
+                        ta.value = data[key];
+                        updateCount(idx);
+                    }
+                });
+                updateProgress();
+                setAutosaveStatus('saved', `Dernière sauvegarde : ${formatDate(data.updatedAt)}`);
+            }
+        }
+        loadScript();
+
+        // ── Compteur de caractères + indicateurs ───────────────────────────
+        function updateCount(idx) {
+            const ta = document.getElementById(`textarea${idx}`);
+            const count = document.getElementById(`count${idx}`);
+            const len = ta.value.trim().length;
+            count.textContent = len > 0 ? `${len} car.` : '';
+            const sec = document.getElementById(`sec${idx}`);
+            sec.classList.toggle('has-content', len > 0);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            [0, 1, 2, 3].forEach(idx => {
+                const filled = document.getElementById(`textarea${idx}`).value.trim().length > 0;
+                document.getElementById(`prog${idx}`).classList.toggle('filled', filled);
+            });
+        }
+
+        [0, 1, 2, 3].forEach(idx => {
+            const ta = document.getElementById(`textarea${idx}`);
+            ta.addEventListener('input', () => {
+                updateCount(idx);
+                isDirty = true;
+                setAutosaveStatus('pending', 'Modification en cours…');
+                // Auto-sauvegarde après 2s d'inactivité
+                clearTimeout(autosaveTimer);
+                autosaveTimer = setTimeout(() => autoSave(), 2000);
+            });
+        });
+
+        // ── Sauvegarde ─────────────────────────────────────────────────────
+        async function doSave() {
+            const data = {
+                section1: document.getElementById('textarea0').value,
+                section2: document.getElementById('textarea1').value,
+                section3: document.getElementById('textarea2').value,
+                section4: document.getElementById('textarea3').value,
+            };
+            await saveScript(data);
+            isDirty = false;
+            setAutosaveStatus('saved', `Sauvegardé à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`);
+        }
+
+        async function autoSave() {
+            try { await doSave(); } catch (e) { console.warn('Auto-save error:', e); }
+        }
+
+        document.getElementById('saveBtn').addEventListener('click', async () => {
+            try {
+                await doSave();
+                showToast('✅ Script sauvegardé !');
+            } catch (e) {
+                showToast('❌ Erreur lors de la sauvegarde');
+            }
+        });
+
+        // ── Indicateur de sauvegarde ───────────────────────────────────────
+        function setAutosaveStatus(status, text) {
+            const el = document.getElementById('autosaveIndicator');
+            const textEl = document.getElementById('autosaveText');
+            el.classList.toggle('saved', status === 'saved');
+            textEl.textContent = text;
+        }
+
+        function formatDate(isoString) {
+            if (!isoString) return '';
+            return new Date(isoString).toLocaleDateString('fr-FR', {
+                day: '2-digit', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        // ── Retour ─────────────────────────────────────────────────────────
+        document.getElementById('backBtn').addEventListener('click', async () => {
+            if (isDirty) {
+                // Sauvegarde automatique avant de quitter
+                try { await doSave(); } catch (e) { /* ignore */ }
+            }
+            history.back();
+        });
+    </script>
+</body>
+
+</html>

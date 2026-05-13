@@ -78,130 +78,160 @@
 
     <!-- Étape préalable DAP -->
     <div class="info-box" style="margin-top: 24px; text-align: left; line-height: 1.5;">
-      <h3 style="font-size: 0.95rem; color: var(--primary-color); margin-bottom: 8px;">Étape préalable&nbsp;: Vos DAP à l'écrit</h3>
-      <p style="margin-bottom: 8px;">Avant d'enregistrer votre capsule, il est recommandé de rédiger vos Directives Anticipées en Psychiatrie. Vous pouvez utiliser le <a href="https://www.psycom.org/agir/la-defense-des-droits/kit-mon-gps/#telecharger-le-livret-mon-gps-697d5fd9e384f" target="_blank" rel="noopener" style="color:var(--primary-color);font-weight:600;text-decoration:underline;">Kit Mon GPS (Psycom)</a>.</p>
-      
+      <h3 style="font-size: 0.95rem; color: var(--primary-color); margin-bottom: 8px;">Étape préalable&nbsp;: Vos DAP à
+        l'écrit</h3>
+      <p style="margin-bottom: 8px;">Avant d'enregistrer votre capsule, il est recommandé de rédiger vos Directives
+        Anticipées en Psychiatrie. Vous pouvez utiliser le <a
+          href="https://www.psycom.org/agir/la-defense-des-droits/kit-mon-gps/#telecharger-le-livret-mon-gps-697d5fd9e384f"
+          target="_blank" rel="noopener"
+          style="color:var(--primary-color);font-weight:600;text-decoration:underline;">Kit Mon GPS (Psycom)</a>.</p>
+
       <p style="margin-bottom: 4px; font-weight: 600; font-size: 0.8rem;">Livrets interactifs remplissables&nbsp;:</p>
       <ul style="margin: 0; padding-left: 20px; font-size: 0.8rem;">
-        <li><strong>Adultes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_VF_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_PRISM_monGPS_NOTICE_Usagers.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
-        <li><strong>Ados / Jeunes :</strong> <a href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_ADOS_INTERACTIF_2023.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a href="https://www.psycom.org/wp-content/uploads/2024/04/PSYCOM_GPS_ADO-JEUNES-ADULTES_Notice_Jeunes_DEF.pdf" target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
+        <li><strong>Adultes :</strong> <a
+            href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_VF_INTERACTIF_2023.pdf" target="_blank"
+            rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a
+            href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_PRISM_monGPS_NOTICE_Usagers.pdf"
+            target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
+        <li><strong>Ados / Jeunes :</strong> <a
+            href="https://www.psycom.org/wp-content/uploads/2023/11/PSYCOM_GPS_ADOS_INTERACTIF_2023.pdf" target="_blank"
+            rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Livret</a> | <a
+            href="https://www.psycom.org/wp-content/uploads/2024/04/PSYCOM_GPS_ADO-JEUNES-ADULTES_Notice_Jeunes_DEF.pdf"
+            target="_blank" rel="noopener" style="color:var(--primary-color);text-decoration:underline;">Notice</a></li>
       </ul>
     </div>
 
-    <!-- Bouton installation PWA -->
-    <button id="installBtn" class="btn-install" style="display:none;"
-      aria-label="Installer l'application sur votre téléphone">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-        <path
-          d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-        <path
-          d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
-      </svg>
-      Installer l'application
-    </button>
+    <div id="installWrapper" style="display:none; background:var(--blue-pale); border:1px solid var(--blue-mid); padding:16px; border-radius:12px; text-align:center; margin-top:20px;">
+      <p id="installHint" class="install-hint" style="font-size:0.85rem; color:var(--blue-dark); margin:0 0 12px 0;">
+        📱 Pour installer l'application sur votre écran d'accueil :
+      </p>
 
-    <p id="installHint" class="install-hint" style="display:none; font-size:0.8rem; background:var(--blue-pale); color:var(--blue-dark); padding:12px; border-radius:12px; border:1px solid var(--blue-mid);">
-      📱 Pour installer l'application sur votre écran d'accueil :
-    </p>
+      <!-- Bouton installation PWA -->
+      <button id="installBtn" class="btn-install" style="margin: 0 auto; width:100%; display:inline-flex;"
+        aria-label="Installer l'application sur votre téléphone">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path
+            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+          <path
+            d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+        </svg>
+        Installer l'application
+      </button>
+    </div>
 
     <div style="text-align:center; margin-top: 20px;">
-        <a href="about.html" style="color:var(--gray-500); font-size: 0.9rem; text-decoration: underline;">À propos du projet</a>
+      <a href="about.html" style="color:var(--gray-500); font-size: 0.9rem; text-decoration: underline;">À propos du
+        projet</a>
     </div>
   </div>
 
   <div id="toast" class="toast"></div>
 
   <script type="module">
-  import { setState, registerSW, showToast } from './js/app.js';
+    import { setState, registerSW, showToast, getState } from './js/app.js';
 
-  registerSW();
+    registerSW();
 
-  // ── Installation PWA ───────────────────────────────────────────────────────
-  let deferredPrompt = null;
-  const installBtn  = document.getElementById('installBtn');
-  const installHint = document.getElementById('installHint');
+    // Mode Anti-Retour : Si déjà connecté, redirection auto vers le dashboard
+    const state = getState();
+    if (state.name && state.pin) {
+      window.location.replace('dashboard.html');
+    }
 
-  // Si déjà installée en standalone, ne rien afficher
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
+    // ── Installation PWA ───────────────────────────────────────────────────────
+    let deferredPrompt = null;
+    const installWrapper = document.getElementById('installWrapper');
+    const installBtn = document.getElementById('installBtn');
+    const installHint = document.getElementById('installHint');
 
-  if (!isStandalone) {
-    // Android / Chrome : événement natif
-    window.addEventListener('beforeinstallprompt', e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'flex';
-      installHint.style.display = 'block';
-    });
+    // Si déjà installée en standalone, ne rien afficher
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
 
-    // iOS : pas d'événement natif → afficher un message guidé impérativement sur Safari
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+    if (!isStandalone) {
+      // Android / Chrome : événement natif
+      window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installWrapper.style.display = 'block';
+      });
 
-    if (isIOS) {
-      if (isSafari) {
-        installHint.innerHTML = `
+      // iOS : pas d'événement natif → afficher un message guidé impérativement sur Safari
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+
+      if (isIOS) {
+        if (isSafari) {
+          installHint.innerHTML = `
           <strong>📱 Installation sur iPhone/iPad :</strong><br>
           1. Appuyez sur le bouton de partage <span style="font-size:1.2rem; vertical-align:middle;">⬆</span> en bas (ou haut) de Safari.<br>
           2. Choisissez <strong>« Sur l'écran d'accueil »</strong>.
         `;
-        installHint.style.display = 'block';
-      } else {
-        installHint.innerHTML = `
+          installBtn.style.display = 'none';
+          installWrapper.style.display = 'block';
+        } else {
+          installHint.innerHTML = `
           <strong>⚠️ Attention :</strong><br>
           Pour installer cette application sur iPhone, vous devez <strong>impérativement utiliser Safari</strong> (le bouton d'installation est bloqué sur Chrome ou Facebook).
         `;
-        installHint.style.display = 'block';
+          installBtn.style.display = 'none';
+          installWrapper.style.display = 'block';
+        }
       }
+
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          // Android/Chrome : déclencher la boîte de dialogue native
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            installWrapper.style.display = 'none';
+            showToast('✅ Application installée avec succès !');
+          }
+          deferredPrompt = null;
+        } else {
+          // iOS : afficher les instructions
+          showToast('Sur iOS&nbsp;: appuyez sur  ⬆  puis «&nbsp;Sur l\'écran d\'accueil&nbsp;»', 5000);
+        }
+      });
+
+      // Masquer si l'utilisateur installe depuis ailleurs
+      window.addEventListener('appinstalled', () => {
+        installWrapper.style.display = 'none';
+      });
     }
 
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        // Android/Chrome : déclencher la boîte de dialogue native
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          installBtn.style.display = 'none';
-          installHint.style.display = 'none';
-          showToast('✅ Application installée avec succès !');
-        }
-        deferredPrompt = null;
-      } else {
-        // iOS : afficher les instructions
-        showToast('Sur iOS&nbsp;: appuyez sur  ⬆  puis «&nbsp;Sur l\'écran d\'accueil&nbsp;»', 5000);
-      }
+    // ── PIN auto-advance ───────────────────────────────────────────────────────
+    const pins = document.querySelectorAll('.pin-digit');
+    pins.forEach((input, i) => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/\D/g, '');
+        if (input.value && i < pins.length - 1) pins[i + 1].focus();
+      });
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !input.value && i > 0) pins[i - 1].focus();
+      });
     });
 
-    // Masquer si l'utilisateur installe depuis ailleurs
-    window.addEventListener('appinstalled', () => {
-      installBtn.style.display = 'none';
-      installHint.style.display = 'none';
+    // Nettoyage de sécurité au chargement/retour
+    const clearInputs = () => {
+      document.getElementById('userName').value = '';
+      pins.forEach(p => p.value = '');
+    };
+    window.addEventListener('pageshow', clearInputs);
+    clearInputs();
+
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('userName').value.trim();
+      const pin = Array.from(pins).map(p => p.value).join('');
+
+      if (!name) { showToast('Veuillez entrer votre prénom.'); return; }
+      if (pin.length !== 4) { showToast('Veuillez entrer votre code PIN à 4 chiffres.'); return; }
+
+      setState({ name, pin });
+      window.location.replace('dashboard.html');
     });
-  }
-
-  // ── PIN auto-advance ───────────────────────────────────────────────────────
-  const pins = document.querySelectorAll('.pin-digit');
-  pins.forEach((input, i) => {
-    input.addEventListener('input', () => {
-      input.value = input.value.replace(/\D/g, '');
-      if (input.value && i < pins.length - 1) pins[i + 1].focus();
-    });
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Backspace' && !input.value && i > 0) pins[i - 1].focus();
-    });
-  });
-
-  document.getElementById('loginForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const name = document.getElementById('userName').value.trim();
-    const pin  = Array.from(pins).map(p => p.value).join('');
-
-    if (!name) { showToast('Veuillez entrer votre prénom.'); return; }
-    if (pin.length !== 4) { showToast('Veuillez entrer votre code PIN à 4 chiffres.'); return; }
-
-    setState({ name, pin });
-    window.location.href = 'dashboard.html';
-  });
   </script>
 </body>
 

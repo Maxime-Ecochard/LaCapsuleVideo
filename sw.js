@@ -1,9 +1,10 @@
-const CACHE_NAME = 'capsule-video-v3';
+const CACHE_NAME = 'capsule-video-v4';
 const STATIC_ASSETS = [
     './',
     './index.html',
     './dashboard.html',
     './record.html',
+    './script.html',
     './access.html',
     './historique.html',
     './about.html',

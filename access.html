@@ -175,7 +175,11 @@
         import { requireAuth, showToast, addHistoryEntry, getUserProfile, getState, getAccessList, removeAccessPerson } from './js/app.js';
         import { renderAccessList, handleAddPerson, cancelEdit } from './js/access.js';
 
+        // Sécurité : Vérification immédiate au chargement/retour
         if (!requireAuth()) throw new Error('Not authenticated');
+        window.addEventListener('pageshow', () => {
+            if (!requireAuth()) return;
+        });
 
         const state = getState();
         const listEl = document.getElementById('accessList');
