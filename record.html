@@ -84,17 +84,26 @@
 
             <!-- Barre de contrôles téléprompter (affichée uniquement pendant l'enregistrement) -->
             <div class="teleprompter-controls" id="tpControls" style="display:none;">
-                <button class="tp-btn" id="tpPrevBtn" title="Section précédente">◀ Préc.</button>
-                <button class="tp-btn tp-pause-btn" id="tpPauseBtn" title="Pause/Reprise défilement">⏸ Pause</button>
-                <button class="tp-btn" id="tpNextBtn" title="Section suivante">Suiv. ▶</button>
-                <div class="tp-section-indicator" id="tpSectionIndicator">1 / 4</div>
-                <div class="tp-speed-group">
-                    <button class="tp-btn" id="tpSlowBtn" title="Lent">🐢</button>
-                    <button class="tp-btn" id="tpFastBtn" title="Rapide">🐇</button>
+                <!-- Ligne 1 : Réglages (Vitesse et Police) -->
+                <div class="tp-controls-row tp-settings-row">
+                    <div class="tp-control-group">
+                        <button class="tp-mini-btn" id="tpSlowBtn" title="Plus lent">🐢</button>
+                        <span class="tp-mini-label">Vitesse</span>
+                        <button class="tp-mini-btn" id="tpFastBtn" title="Plus rapide">🐇</button>
+                    </div>
+                    <div class="tp-control-group">
+                        <button class="tp-mini-btn" id="tpFontDecBtn" title="Texte plus petit">A-</button>
+                        <span class="tp-mini-label">Police</span>
+                        <button class="tp-mini-btn" id="tpFontIncBtn" title="Texte plus grand">A+</button>
+                    </div>
                 </div>
-                <div class="tp-font-group">
-                    <button class="tp-btn font-small" id="tpFontDecBtn" title="Réduire le texte">A-</button>
-                    <button class="tp-btn font-large" id="tpFontIncBtn" title="Agrandir le texte">A+</button>
+
+                <!-- Ligne 2 : Navigation -->
+                <div class="tp-controls-row tp-nav-row">
+                    <button class="tp-btn" id="tpPrevBtn" title="Section précédente">◀</button>
+                    <button class="tp-btn tp-pause-btn" id="tpPauseBtn" title="Pause/Reprise">⏸ Pause</button>
+                    <button class="tp-btn" id="tpNextBtn" title="Section suivante">▶</button>
+                    <div class="tp-section-indicator" id="tpSectionIndicator">1 / 4</div>
                 </div>
             </div>
 
@@ -319,10 +328,6 @@
                 const startOffset = window.innerHeight * 0.45;
                 tpScrollY = -block.offsetTop + startOffset;
                 tpTextTrack.style.transform = `translateY(${tpScrollY}px)`;
-                tpSectionInd.textContent = `${idx + 1} / 4`;
-            } else if (idx < 3) {
-                // Si la section est vide, on essaie la suivante
-                tpJumpToSection(idx + 1);
             }
         }
 
@@ -333,29 +338,29 @@
                 if (!tpPaused) {
                     tpScrollY -= tpScrollSpeed;
                     const trackH = tpTextTrack.scrollHeight;
-                    const minY = -(trackH); // On scrolle jusqu'à ce que tout le bloc soit sorti par le haut
+                    const minY = -(trackH); 
                     if (tpScrollY < minY) {
                         tpPaused = true;
                         tpPauseBtn.textContent = '▶ Reprendre';
-                        tpPauseBtn.classList.remove('tp-pause-btn');
                     } else {
                         tpTextTrack.style.transform = `translateY(${tpScrollY}px)`;
-
-                        // Mettre à jour l'indicateur de section en fonction du scroll
-                        updateSectionIndicatorFromScroll();
                     }
                 }
+                updateSectionIndicatorFromScroll();
                 tpRAF = requestAnimationFrame(step);
             }
             tpRAF = requestAnimationFrame(step);
         }
 
         function updateSectionIndicatorFromScroll() {
+            const focusPoint = window.innerHeight * 0.45; 
             SECTIONS_META.forEach((meta, idx) => {
                 const block = document.getElementById(`tpSectionBlock${idx}`);
                 if (block) {
-                    const offset = block.offsetTop + tpScrollY;
-                    if (offset < 150 && offset > -block.offsetHeight) {
+                    const blockTop = block.offsetTop + tpScrollY;
+                    const blockBottom = blockTop + block.offsetHeight;
+                    // Si le point de focus (45vh) est à l'intérieur de ce bloc
+                    if (focusPoint >= blockTop && focusPoint <= blockBottom) {
                         tpCurrentSection = idx;
                         tpSectionInd.textContent = `${idx + 1} / 4`;
                     }
@@ -375,11 +380,23 @@
         });
 
         tpNextBtn.addEventListener('click', () => {
-            if (tpCurrentSection < 3) tpJumpToSection(tpCurrentSection + 1);
+            // Chercher la prochaine section non vide
+            for (let i = tpCurrentSection + 1; i <= 3; i++) {
+                if (document.getElementById(`tpSectionBlock${i}`)) {
+                    tpJumpToSection(i);
+                    break;
+                }
+            }
         });
 
         tpPrevBtn.addEventListener('click', () => {
-            if (tpCurrentSection > 0) tpJumpToSection(tpCurrentSection - 1);
+            // Chercher la section non vide précédente
+            for (let i = tpCurrentSection - 1; i >= 0; i--) {
+                if (document.getElementById(`tpSectionBlock${i}`)) {
+                    tpJumpToSection(i);
+                    break;
+                }
+            }
         });
 
         tpSlowBtn.addEventListener('click', () => {
@@ -460,14 +477,20 @@
                         // Démarrer le téléprompter si activé
                         if (tpEnabled && userScript) {
                             tpPrepareContinuousScript();
-                            tpCurrentSection = 0;
                             tpPaused = false;
-                            tpScrollY = 0;
-                            tpTextTrack.style.transform = 'translateY(0)';
-                            tpSectionInd.textContent = '1 / 4';
-                            tpPauseBtn.textContent = '⏸ Pause';
                             tpOverlay.style.display = 'flex';
                             tpControls.style.display = 'flex';
+                            tpPauseBtn.textContent = '⏸ Pause';
+                            
+                            // Sauter à la première section non vide
+                            let firstIdx = 0;
+                            for (let i = 0; i <= 3; i++) {
+                                if (document.getElementById(`tpSectionBlock${i}`)) {
+                                    firstIdx = i;
+                                    break;
+                                }
+                            }
+                            tpJumpToSection(firstIdx);
                             tpStartScroll();
                         }
                     }

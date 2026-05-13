@@ -126,10 +126,19 @@
         <!-- Page Content -->
         <main class="page" id="mainPage">
 
-            <!-- Hero -->
-            <div class="dashboard-hero">
-                <p style="font-size:0.95rem;opacity:0.8;margin-bottom:4px;">Bonjour,</p>
-                <p class="hero-name" id="heroName">Émilie</p>
+            <div class="dashboard-hero" style="display:flex; flex-direction:column; align-items:center;">
+                <p style="font-size:0.95rem;opacity:0.8;margin-bottom:4px; margin-top:0;">Bonjour,</p>
+                <p class="hero-name" id="heroName" style="margin:0 0 10px 0;">Émilie</p>
+
+                <button class="btn btn-secondary btn-sm" id="editProfileBtn"
+                    style="background: rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.35); font-size: 0.8rem; padding: 6px 12px; gap: 6px; margin-bottom:15px;"
+                    title="Modifier mon profil">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                    </svg>
+                    Mon Profil
+                </button>
 
                 <!-- Badge capsule active -->
                 <div class="capsule-status-badge">
@@ -145,8 +154,18 @@
                     </svg>
                     Enregistrer une nouvelle Capsule
                 </button>
+
+                <!-- Bouton Script -->
+                <a href="script.html" class="btn btn-secondary btn-sm"
+                    style="display:inline-flex; background: rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.35); margin-top:10px; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 1.586L10.5 1.793 4.793 7.5l-1.202 3.006 3.006-1.201L12.793 4.086z"/>
+                    </svg>
+                    📝 Préparer mon script
+                </a>
+
                 <a href="tutoriel.html" class="btn btn-secondary btn-sm"
-                    style="display:inline-flex; background: rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4); margin-top:12px;">
+                    style="display:inline-flex; background: rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4); margin-top:10px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -260,8 +279,42 @@
                     Historique des actions
                 </a>
             </div>
-
         </main>
+
+        <!-- Profil Modal -->
+        <div class="modal-overlay" id="profileModal">
+            <div class="modal-content">
+                <h2 class="modal-title">Faisons connaissance 👋</h2>
+                <p style="font-size:0.85rem; color:var(--gray-500); margin-bottom: 20px;">
+                    Ces informations nous permettront de signer de votre part les messages envoyés à vos contacts.
+                </p>
+                <form id="profileForm">
+                    <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label for="prof-firstname">Prénom</label>
+                            <input type="text" id="prof-firstname" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="prof-lastname">Nom de famille</label>
+                            <input type="text" id="prof-lastname" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prof-email">Adresse Email</label>
+                        <input type="email" id="prof-email" placeholder="mail@exemple.fr" />
+                    </div>
+                    <div class="form-group">
+                        <label for="prof-phone">Téléphone</label>
+                        <input type="tel" id="prof-phone" placeholder="06.." />
+                    </div>
+                    <div style="display:flex; gap:12px; margin-top:20px;">
+                        <button type="button" class="btn btn-secondary btn-full" id="closeProfileBtn"
+                            style="background:var(--gray-200); color:var(--gray-600);">Fermer</button>
+                        <button type="submit" class="btn btn-primary btn-full">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Bottom Nav -->
         <nav class="bottom-nav">
@@ -301,7 +354,12 @@
     </div>
     <div id="toast" class="toast"></div>
 
-    <script>
+    <script type="module">
+        import { getState, getUserProfile, saveUserProfile, showToast } from './js/app.js';
+
+        const state = getState();
+        document.getElementById('heroName').textContent = state.name || 'Émilie';
+
         // Fake previous version meta
         const VERSIONS = {
             active: { 
@@ -315,6 +373,49 @@
                 src: 'DAP Emilie 10:01:2026.mp4' 
             }
         };
+
+        // Profile logic
+        let userProfile = null;
+        const profileModal = document.getElementById('profileModal');
+        const profileForm = document.getElementById('profileForm');
+
+        async function loadProfile() {
+            userProfile = await getUserProfile(state.name || 'Émilie');
+            // No auto-open in demo to avoid annoying the user
+        }
+        loadProfile();
+
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            if (userProfile) {
+                document.getElementById('prof-firstname').value = userProfile.firstName || state.name || 'Émilie';
+                document.getElementById('prof-lastname').value = userProfile.lastName || 'André';
+                document.getElementById('prof-email').value = userProfile.email || 'emilie.a@example.com';
+                document.getElementById('prof-phone').value = userProfile.phone || '06 12 34 56 78';
+            } else {
+                document.getElementById('prof-firstname').value = state.name || 'Émilie';
+                document.getElementById('prof-lastname').value = 'André';
+                document.getElementById('prof-email').value = 'emilie.a@example.com';
+                document.getElementById('prof-phone').value = '06 12 34 56 78';
+            }
+            profileModal.style.display = 'flex';
+        });
+
+        profileForm.addEventListener('submit', async e => {
+            e.preventDefault();
+            const firstName = document.getElementById('prof-firstname').value.trim();
+            const lastName = document.getElementById('prof-lastname').value.trim();
+            const email = document.getElementById('prof-email').value.trim();
+            const phone = document.getElementById('prof-phone').value.trim();
+
+            await saveUserProfile({ userId: state.name || 'Émilie', firstName, lastName, email, phone });
+            userProfile = await getUserProfile(state.name || 'Émilie');
+            profileModal.style.display = 'none';
+            showToast('Profil démo mis à jour ✔️');
+        });
+
+        document.getElementById('closeProfileBtn').addEventListener('click', () => {
+            profileModal.style.display = 'none';
+        });
 
         const player = document.getElementById('capsulePlayer');
         const durationChip = document.getElementById('durationChip');

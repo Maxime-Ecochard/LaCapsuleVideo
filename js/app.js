@@ -495,8 +495,8 @@ export async function saveScript(scriptData) {
         const tx = db.transaction(STORE_SCRIPTS, 'readwrite');
         tx.objectStore(STORE_SCRIPTS).put({
             ...scriptData,
-            userId: state.name || '',
-            updatedAt: new Date().toISOString()
+            userId: scriptData.userId || state.name || '',
+            updatedAt: scriptData.updatedAt || new Date().toISOString()
         });
         tx.oncomplete = resolve;
         tx.onerror = e => reject(e.target.error);
@@ -534,16 +534,24 @@ export async function seedDemoData() {
     const db = await openDB();
 
     // Vérifier si des données existent déjà pour l'utilisateur de démo
-    const tx = db.transaction(STORE_HIST, 'readonly');
-    const store = tx.objectStore(STORE_HIST);
-    const index = store.index('userId');
-    const req = index.getAll('Émilie');
+    const histTx = db.transaction(STORE_HIST, 'readonly');
+    const histStore = histTx.objectStore(STORE_HIST);
+    const histIndex = histStore.index('userId');
+    const histReq = histIndex.getAll('Émilie');
 
-    const existing = await new Promise(r => {
-        req.onsuccess = () => r(req.result);
+    const existingHist = await new Promise(r => {
+        histReq.onsuccess = () => r(histReq.result);
     });
 
-    if (existing && existing.length > 0) return;
+    const scriptTx = db.transaction(STORE_SCRIPTS, 'readonly');
+    const scriptStore = scriptTx.objectStore(STORE_SCRIPTS);
+    const scriptReq = scriptStore.get('Émilie');
+    const existingScript = await new Promise(r => {
+        scriptReq.onsuccess = () => r(scriptReq.result);
+    });
+
+    // Si tout existe déjà, on ne fait rien
+    if (existingHist && existingHist.length > 0 && existingScript) return;
 
     // 0. Ajouter le profil fictif pour Émilie
     await saveUserProfile({
